@@ -13,6 +13,10 @@
          class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createCircle()">
       <img src="circle.png">
     </div>
+    <div [class.bg-purple-200]="shapeType === 'text box'"
+         class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createText()">
+      <img src="text.png">
+    </div>
     <div [class.bg-purple-200]="shapeType === 'line'"
          class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createLine()">
       <img src="line.png">
@@ -27,16 +31,16 @@
     </div>
   </div>
 </div>
-<div class="fixed top-0 bottom-0 left-0 z-[99999999] hidden">
-  <div class="w-[200px p-[20px] h-full">
-    <div class="w-[200px] h-full bg-white shadow-xl border rounded-[0.5rem] p-[4px]">
-      <div>
-        <label >Stroke</label>
-        <div class="w-full rounded-[0.5rem] border h-[44px]"></div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="fixed top-0 bottom-0 left-0 z-[99999999]">-->
+<!--  <div class="w-[250px] p-[20px] h-full">-->
+<!--    <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] p-[4px]">-->
+<!--      <div>-->
+<!--        <label >Stroke</label>-->
+<!--        <div class="w-full rounded-[0.5rem] border h-[36px]"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <div class="h-screen w-screen relative">
   <div class="h-[1000000px] w-[1000000px] bg-white relative" id="body-drag">
     <svg id="canvas" class="w-full h-full absolute top-0 left-0"></svg>

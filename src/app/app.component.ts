@@ -1,5 +1,4 @@
 import { Component, OnInit} from '@angular/core';
-import {ElementInfo} from "../shared/element-info";
 import { timer} from "rxjs";
 
 @Component({
@@ -9,17 +8,16 @@ import { timer} from "rxjs";
 })
 export class AppComponent implements OnInit {
 
-  elements: ElementInfo[] = [];
-  selectedElement!: ElementInfo;
   isDrawing = false;
   selectedItemId: any;
   currentRectangle: SVGRectElement | null = null;
   currentSVGElement: SVGElement | null = null;
+  currentInputElement: HTMLElement | null = null;
   SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
   title = 'eazifoto-v2';
 
-  shapeType: 'polygon' | 'rectangle' | 'ellipse' | 'line' | 'single arrow' | 'double arrow' | 'cursor'  = "cursor";
+  shapeType: 'polygon' | 'rectangle' | 'ellipse' | 'line' | 'single arrow' | 'double arrow' | 'text box' | 'cursor'  = "cursor";
   removeListeners!: (() => void)
   addListeners!: (() => void)
 
@@ -35,12 +33,34 @@ export class AppComponent implements OnInit {
         return;
       }
       this.currentSVGElement = null;
+      this.checkAndRemoveElements();
       if (this.removeListeners) {
         this.removeListeners();
       }
       this.removeHandles();
     })
   }
+
+  checkAndRemoveElements = () => {
+    if (this.currentInputElement && this.currentRectangle) {
+      const content = this.currentInputElement.textContent?.trim();
+
+      // If the h1 element is empty
+      if (!content) {
+        // Hide or remove elements
+        this.currentInputElement.style.display = 'none'; // Hide the <h1> element
+        this.currentRectangle.style.display = 'none'; // Hide the rectangle
+
+        // Optionally, remove elements from DOM if needed
+        this.currentInputElement.remove();
+        this.currentRectangle.remove();
+      } else {
+        // Ensure the elements are visible if they contain content
+        this.currentInputElement.style.display = '';
+        this.currentRectangle.style.display = '';
+      }
+    }
+  };
 
   removeHandles = () => {
     this.currentRectangle?.setAttribute('stroke', 'transparent');
@@ -49,7 +69,6 @@ export class AppComponent implements OnInit {
     const oldHandles = document.querySelectorAll('.line-handle');
     oldHandles.forEach(handle => handle.remove());
   }
-
 
   IdGen() {
     return 'xxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -897,6 +916,367 @@ export class AppComponent implements OnInit {
     };
 
    this.addListeners = () => {
+      this.svgCanvas.addEventListener('mousedown', handleMouseDown);
+      this.svgCanvas.addEventListener('mousemove', handleMouseMove);
+      this.svgCanvas.addEventListener('mouseup', handleMouseUp);
+    }
+
+    this.removeListeners = () => {
+      this.svgCanvas.removeEventListener('mousedown', handleMouseDown);
+      this.svgCanvas.removeEventListener('mousemove', handleMouseMove);
+      this.svgCanvas.removeEventListener('mouseup', handleMouseUp);
+    }
+
+    this.addListeners();
+  }
+
+  textbox() {
+    if (this.removeListeners) {
+      this.removeListeners();
+    }
+
+    this.currentSVGElement = null;
+    this.svgCanvas.style.cursor = 'crosshair';
+    const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+    let isDrawing = false;
+    let startX: number;
+    let startY: number;
+    let isDragging = false;
+    let isResizing = false;
+    let handleAdd = false;
+    let resizeDirection: string | null = null;
+    let offsetX: number; // Offset for dragging
+    let offsetY: number;
+
+    const removeHandles = () => {
+      this.currentRectangle?.setAttribute('stroke', 'transparent');
+      const polyHandles = document.querySelectorAll('.resize-handle');
+      polyHandles.forEach(handle => handle.remove());
+      const oldHandles = document.querySelectorAll('.line-handle');
+      oldHandles.forEach(handle => handle.remove());
+    }
+
+    removeHandles();
+
+    const createRectangle = () => {
+      let id = this.IdGen();
+      let rect = document.createElementNS(this.SVG_NAMESPACE, 'rect') as SVGRectElement;
+      rect.setAttribute('fill', 'none'); // No fill color
+      rect.setAttribute('stroke', 'blue'); // Border color
+      rect.setAttribute('stroke-width', '1');
+      rect.setAttribute('id', `${id}main-rect`);
+      rect.style.pointerEvents = 'all';// Allow poi
+      this.currentRectangle = rect;
+      this.selectedItemId = id;
+      this.isDrawing = true;
+      this.svgCanvas.appendChild(rect);
+      let textInput = createTextInput(id);
+
+      rect?.addEventListener('mousedown', (e) => {
+        this.textbox();
+        this.svgCanvas.style.cursor = 'move';
+        this.selectedItemId = id;
+        this.currentRectangle = rect;
+        this.currentInputElement = textInput;
+
+        updateTextPosition();
+        updateHandles(); // Update handles when rectangle is clicked
+      });
+
+      rect?.addEventListener('click', (e) => {
+        e.stopPropagation();
+      })
+
+      rect.addEventListener('dblclick', () => {
+        this.currentInputElement?.focus();
+        setCursorToEnd(this.currentInputElement!)
+        // Focus on input field when double-clicked
+      });
+
+      if (!handleAdd) {
+        addResizeHandles();
+        handleAdd = true;
+      }
+    };
+
+    const createTextInput = (id: any): HTMLElement | null => {
+      if (this.currentRectangle) {
+        let textInput = document.createElement('h1');
+        textInput.style.position = 'absolute';
+        textInput.style.border = 'none';
+        textInput.style.background = 'transparent';
+        textInput.style.outline = 'none';
+        textInput.style.fontSize = '14px';
+        textInput.style.pointerEvents = 'none';
+        textInput.style.paddingLeft = '10px';
+        textInput.style.paddingRight = '10px';
+        textInput.style.lineHeight = '1.1';
+        textInput.contentEditable = 'true';
+        textInput.id = `${id}textInput`;
+
+        this.currentInputElement = textInput;
+
+        textInput.addEventListener('focus', () => {
+          isResizing = false;
+          isDrawing = false;// Disable resizing when input is focused
+        });
+        textInput.addEventListener('blur', () => {
+          isResizing = true; // Enable resizing when input is blurred
+        });
+        textInput.addEventListener('input', () => {
+          console.log(this.currentInputElement!.style.height)
+          const inputHeight = parseFloat(`${this.currentInputElement?.scrollHeight}`);
+          this.currentRectangle?.setAttribute('height', inputHeight.toString());
+          updateHandles();
+        });
+        this.svgCanvas.parentElement?.appendChild(textInput);
+        updateTextPosition();
+        return textInput;
+      }
+
+      return null;
+    };
+
+    const updateTextPosition = () => {
+      if (this.currentRectangle && this.currentInputElement) {
+        const rectX = parseFloat(this.currentRectangle.getAttribute('x')!);
+        const rectY = parseFloat(this.currentRectangle.getAttribute('y')!);
+        const width = parseFloat(this.currentRectangle.getAttribute('width')!);
+
+        this.currentInputElement.style.left = `${rectX}px`;
+        this.currentInputElement.style.top = `${rectY}px`;
+        this.currentInputElement.style.width = `${width}px`;
+
+        let newheight = this.currentInputElement?.scrollHeight;
+        this.currentRectangle.setAttribute('height', newheight.toString());
+      }
+    };
+
+    const addResizeHandles = () => {
+      if (this.currentRectangle) {
+        const handles = [
+          { position: 'left', cursor: 'ew-resize' },
+          { position: 'right', cursor: 'ew-resize' }
+        ];
+
+        handles.forEach(({ position, cursor }) => {
+          const handle = document.createElementNS(SVG_NAMESPACE, 'rect');
+          handle.setAttribute('class', `resize-handle resize-${position}`);
+          handle.setAttribute('fill', 'white');
+          handle.setAttribute('width', '10');
+          handle.setAttribute('height', '10');
+          handle.setAttribute('stroke', 'blue'); // Border color for the ellipse
+          handle.setAttribute('stroke-width', '1');
+          handle.setAttribute('cursor', cursor);
+          handle.setAttribute('data-resize', position);
+          handle.setAttribute('rx', '2.5'); // Border radius for the handle
+          handle.setAttribute('ry', '2.5'); // Border radius for the handle
+          this.svgCanvas.appendChild(handle);
+        });
+
+        // Ensure handles are positioned correctly initially
+        if (this.currentRectangle) {
+          const handles = document.querySelectorAll('.resize-handle');
+          handles.forEach((handle) => {
+            handle.setAttribute('fill', 'white');
+            const svgHandle = handle as SVGRectElement;
+            const position = svgHandle.getAttribute('data-resize')!;
+            updateHandlePosition(position);
+          });
+        }
+      }
+    };
+
+    const setCursorToEnd = (element: HTMLElement) => {
+      const range = document.createRange();
+      const selection = window.getSelection();
+
+      if (element && selection) {
+        range.selectNodeContents(element);
+        range.collapse(false); // Collapse to the end of the text
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    };
+
+    const getAdjustedCoordinates = (e: MouseEvent) => {
+      const rect = this.svgCanvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    };
+
+    const updateHandlePosition = (position: string) => {
+      const handle = document.querySelector(`.resize-${position}`) as SVGRectElement;
+      if (handle && this.currentRectangle) {
+        const rect = this.currentRectangle!;
+        const rectX = parseFloat(rect.getAttribute('x')!);
+        const rectY = parseFloat(rect.getAttribute('y')!);
+        const rectWidth = parseFloat(rect.getAttribute('width')!);
+        const rectHeight = parseFloat(rect.getAttribute('height')!);
+
+        switch (position) {
+          case 'left':
+            handle.setAttribute('x', (rectX - 5).toString());
+            handle.setAttribute('y', (rectY + rectHeight / 2 - 5).toString());
+            break;
+          case 'right':
+            handle.setAttribute('x', (rectX + rectWidth - 5).toString());
+            handle.setAttribute('y', (rectY + rectHeight / 2 - 5).toString());
+            break;
+        }
+      }
+    };
+
+    const updateHandles = () => {
+      // Remove old handles
+      removeHandles();
+      // Re-add handles
+      this.currentRectangle?.setAttribute('stroke', 'blue');
+      addResizeHandles();
+    };
+
+    const updateRectangle = (startX: number, startY: number, currentX: number, currentY: number) => {
+      const width = currentX - startX;
+
+      // Update rectangle's attributes
+      if (this.currentRectangle) {
+        this.currentRectangle.setAttribute('x', Math.min(startX, currentX).toString());
+        this.currentRectangle.setAttribute('y', startY.toString()); // Height is fixed, so y coordinate stays the same
+        this.currentRectangle.setAttribute('width', Math.abs(width).toString());
+        this.currentRectangle.setAttribute('height', '50'); // Fixed height during draw
+
+        // Update input size to match the rectangle
+        if (this.currentInputElement) {
+          this.currentInputElement.style.width = '${Math.abs(width)}px';
+          this.currentInputElement.style.height = '50px'; // Fixed height during draw
+
+          // Update font size based on fixed height
+          this.currentInputElement.style.fontSize = '50px';
+        }
+
+        // Update handles position
+        updateHandles();
+        updateTextPosition();
+      }
+    };
+
+    const updateRectangleSize = (e: MouseEvent) => {
+      if (this.currentRectangle) {
+        const adjusted = getAdjustedCoordinates(e); // Get adjusted coordinates
+
+        const rectX = parseFloat(this.currentRectangle.getAttribute('x')!);
+        const width = parseFloat(this.currentRectangle.getAttribute('width')!);
+
+        switch (resizeDirection) {
+          case 'left':
+            const newLeftX = Math.min(adjusted.x, rectX + width);
+            const newLeftWidth = Math.max(width + (rectX - newLeftX), 0);
+
+            this.currentRectangle.setAttribute('x', newLeftX.toString());
+            this.currentRectangle.setAttribute('width', newLeftWidth.toString());
+            break;
+
+          case 'right':
+            const newRightWidth = Math.max(adjusted.x - rectX, 0);
+
+            this.currentRectangle.setAttribute('width', newRightWidth.toString());
+            break;
+        }
+
+        updateHandles();
+      }
+
+      updateTextPosition();
+    }
+
+
+    const startDragging = (e: MouseEvent) => {
+      if (this.currentRectangle) {
+        const adjusted = getAdjustedCoordinates(e);
+        offsetX = adjusted.x - parseFloat(this.currentRectangle.getAttribute('x')!);
+        offsetY = adjusted.y - parseFloat(this.currentRectangle.getAttribute('y')!);
+        isDragging = true;
+        e.stopPropagation(); // Prevent resize logic from interfering
+      }
+    };
+
+    const dragRectangle = (e: MouseEvent) => {
+      if (isDragging && this.currentRectangle) {
+        const adjusted = getAdjustedCoordinates(e);
+        const newX = adjusted.x - offsetX;
+        const newY = adjusted.y - offsetY;
+        this.currentRectangle.setAttribute('x', newX.toString());
+        this.currentRectangle.setAttribute('y', newY.toString());
+        updateHandles();
+        updateTextPosition();
+      }
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.target instanceof SVGRectElement) {
+        if (e.target.classList.contains('resize-handle')) {
+          resizeDirection = (e.target as SVGRectElement).getAttribute('data-resize')!;
+          isResizing = true;
+        } else {
+          // this.currentRectangle = e.target as SVGRectElement;
+          startDragging(e);
+        }
+      } else {
+        if (this.shapeType !== 'cursor') {
+          if (!this.currentSVGElement) {
+            const rect = this.svgCanvas.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+
+            createRectangle();
+            isDrawing = true;
+          }
+        }
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const adjusted = getAdjustedCoordinates(e);
+      if (isResizing && resizeDirection) {
+        updateRectangleSize(e);
+      } else if (isDragging) {
+        dragRectangle(e);
+      } else if (isDrawing && this.currentRectangle) {
+        updateRectangle(startX, startY,adjusted.x, adjusted.y);
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (isDrawing) {
+        timer(500).subscribe({
+          next: () => {
+            this.isDrawing = false;
+          }
+        });
+        isDrawing = false;
+        this.currentInputElement?.focus();
+        this.currentRectangle?.setAttribute('stroke', 'blue');
+        if (!handleAdd) {
+          addResizeHandles();
+          handleAdd = true;
+        } else {
+          updateHandles();
+        }
+      }
+      if (isDragging) {
+        isDragging = false;
+      }
+      if (isResizing) {
+        isResizing = false;
+        resizeDirection = null;
+      }
+      this.shapeType = 'cursor';
+      this.svgCanvas.style.cursor = 'default';
+    };
+
+    this.addListeners = () => {
       this.svgCanvas.addEventListener('mousedown', handleMouseDown);
       this.svgCanvas.addEventListener('mousemove', handleMouseMove);
       this.svgCanvas.addEventListener('mouseup', handleMouseUp);
@@ -2308,6 +2688,11 @@ export class AppComponent implements OnInit {
   createLine() {
     this.shapeType = 'line';
     this.line();
+  }
+
+  createText() {
+    this.shapeType = 'text box';
+    this.textbox();
   }
 
   createSingleArrowLine() {
