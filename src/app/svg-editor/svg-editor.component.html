@@ -1,0 +1,107 @@
+<div class="h-screen w-screen relative">
+  <div class="h-[1000000px] w-[1000000px] bg-white relative" id="body-drag">
+    <svg id="canvas" class="w-full h-full absolute top-0 left-0"></svg>
+  </div>
+  <div class="fixed top-0 bottom-0 left-0" id="toolbox">
+    <div class="w-[250px] p-[20px] h-full" *ngIf="currentSVGElement">
+      <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] p-[8px] divide-y">
+        <div>
+          <label >Stroke</label>
+          <div class="px-[4px] space-y-[4px]">
+            <label>Color</label>
+            <div class="flex items-center space-x-4">
+              <div class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2]" (click)="color.click()" [ngStyle]="{'background-color': itemSelected.strokeColor}"></div>
+                <input #color type="color" class="text-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.strokeColor" (ngModelChange)="updateSVGStrokeColor($event)">
+              </div>
+              <label class="text-xs whitespace-nowrap" (click)="generateRandom2()">Generate Random 2 Colors</label>
+            </div>
+          </div>
+          <div class="px-[4px] space-y-[4px]">
+            <label >Color</label>
+            <div class="grid grid-cols-2 gap-0.5">
+              <div *ngFor="let strokeColor of mainTwo" class="rounded-[0.5rem] border h-[36px] w-full overflow-hidden cursor-pointer flex justify-center items-center" (click)="updateSVGStrokeColor2(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
+                <label>{{colorName(strokeColor)}}</label>
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-0.5">
+              <div *ngFor="let strokeColor of strokeColors" class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden cursor-pointer" (click)="updateSVGStrokeColor2(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
+              </div>
+            </div>
+          </div>
+          <div class="px-[4px]">
+            <label>Width</label>
+            <div class="flex space-x-[4px] items-center">
+              <input class="outline-0 border rounded" [min]="2" [max]="4" type="range" [(ngModel)]="itemSelected.strokeWidth"  (ngModelChange)="updateSVGStrokeWidth($event)">
+            </div>
+          </div>
+          <div class="px-[4px]">
+            <label>Sides</label>
+            <div class="flex space-x-[4px] items-center">
+              <input class="outline-0 border rounded" [min]="3" [max]="16" type="range" [(ngModel)]="itemSelected.numberOfPoints"  (ngModelChange)="updateSVGSides()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <label >Fill</label>
+          <div class="px-[4px] space-y-[4px]">
+            <label>Color</label>
+            <div class="flex items-center space-x-4">
+              <div class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2]" (click)="color.click()" [ngStyle]="{'background-color': itemSelected.strokeColor}"></div>
+                <input #color type="color" class="text-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.strokeColor" (ngModelChange)="updateSVGFillColor($event)">
+              </div>
+              <label class="text-xs whitespace-nowrap" (click)="generateRandom2()">Generate Random 2 Colors</label>
+            </div>
+          </div>
+          <div class="px-[4px] space-y-[4px]">
+            <label >Color</label>
+            <div class="grid grid-cols-2 gap-0.5">
+              <div *ngFor="let strokeColor of mainTwo" class="rounded-[0.5rem] border h-[36px] w-full overflow-hidden cursor-pointer flex justify-center items-center" (click)="updateSVGFillColor(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
+                <label>{{colorName(strokeColor)}}</label>
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-0.5">
+              <div *ngFor="let strokeColor of strokeColors" class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden cursor-pointer" (click)="updateSVGFillColor(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixed top-[8px] h-[48px] left-0 right-0 flex justify-center">
+    <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-gray-100">
+      <div [class.bg-purple-200]="shapeType === 'cursor'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+        <img src="cursor.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'rectangle'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createRectangle()">
+        <img src="square.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'polygon'"  class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createTriangle()">
+        <img src="polygon.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'ellipse'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createCircle()">
+        <img src="circle.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'text box'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createText()">
+        <img src="text.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'line'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createLine()">
+        <img src="line.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'single arrow'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createSingleArrowLine()">
+        <img src="singleArrow.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'double arrow'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createDoubleArrowLine()">
+        <img src="doubleArrow.png">
+      </div>
+    </div>
+  </div>
+</div>
+

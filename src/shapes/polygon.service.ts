@@ -31,8 +31,8 @@ export class PolygonService {
   //     pointsInput++;
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
-  //     rect.setAttribute('stroke', 'blue'); // Border color
-  //     rect.setAttribute('stroke-width', '2');
+  //     rect.setAttribute('strokeColor', 'blue'); // Border color
+  //     rect.setAttribute('strokeColor-width', '2');
   //     rect.setAttribute('id', `${pointsInput}`);
   //     rect.style.pointerEvents = 'all';// Allow pointer events on the entire rectangle
   //     currentRectangle = rect;
@@ -64,8 +64,8 @@ export class PolygonService {
   //     if (currentRectangle) {
   //       let poly = document.createElementNS(SVG_NAMESPACE, 'polygon');
   //       poly.setAttribute('fill', 'rgba(0, 123, 255, 0.5)'); // Optional fill color for the polygon
-  //       poly.setAttribute('stroke', 'blue'); // Border color for the polygon
-  //       poly.setAttribute('stroke-width', '2');
+  //       poly.setAttribute('strokeColor', 'blue'); // Border color for the polygon
+  //       poly.setAttribute('strokeColor-width', '2');
   //       let id = `${pointsInput}polygon`;
   //       poly.setAttribute('id', id);
   //       poly.style.pointerEvents = 'none'; // Disable pointer events for the polygon
@@ -133,8 +133,8 @@ export class PolygonService {
   //         handle.setAttribute('fill', 'white');
   //         handle.setAttribute('width', '10');
   //         handle.setAttribute('height', '10');
-  //         handle.setAttribute('stroke', 'blue'); // Border color for the ellipse
-  //         handle.setAttribute('stroke-width', '2');
+  //         handle.setAttribute('strokeColor', 'blue'); // Border color for the ellipse
+  //         handle.setAttribute('strokeColor-width', '2');
   //         handle.setAttribute('cursor', cursor);
   //         handle.setAttribute('data-resize', position);
   //         handle.setAttribute('rx', '2.5'); // Border radius for the handle
@@ -439,8 +439,8 @@ export class PolygonService {
   //     pointsInput++;
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
-  //     rect.setAttribute('stroke', 'blue'); // Border color
-  //     rect.setAttribute('stroke-width', '2');
+  //     rect.setAttribute('strokeColor', 'blue'); // Border color
+  //     rect.setAttribute('strokeColor-width', '2');
   //     rect.setAttribute('id', `${pointsInput}`);
   //     rect.style.pointerEvents = 'all'; // Allow pointer events on the entire rectangle
   //     currentRectangle = rect;
@@ -473,8 +473,8 @@ export class PolygonService {
   //     if (currentRectangle) {
   //       let square = document.createElementNS(SVG_NAMESPACE, 'polygon');
   //       square.setAttribute('fill', 'rgba(0, 123, 255, 0.5)'); // Optional fill color for the square
-  //       square.setAttribute('stroke', 'blue'); // Border color for the square
-  //       square.setAttribute('stroke-width', '2');
+  //       square.setAttribute('strokeColor', 'blue'); // Border color for the square
+  //       square.setAttribute('strokeColor-width', '2');
   //       let id = `${pointsInput}square`;
   //       square.setAttribute('id', id);
   //       square.style.pointerEvents = 'none'; // Disable pointer events for the square
@@ -526,8 +526,8 @@ export class PolygonService {
   //         handle.setAttribute('fill', 'white');
   //         handle.setAttribute('width', '10');
   //         handle.setAttribute('height', '10');
-  //         handle.setAttribute('stroke', 'blue'); // Border color for the ellipse
-  //         handle.setAttribute('stroke-width', '2');
+  //         handle.setAttribute('strokeColor', 'blue'); // Border color for the ellipse
+  //         handle.setAttribute('strokeColor-width', '2');
   //         handle.setAttribute('cursor', cursor);
   //         handle.setAttribute('data-resize', position);
   //         handle.setAttribute('rx', '2.5'); // Border radius for the handle
@@ -807,8 +807,8 @@ export class PolygonService {
   //   const createRectangle = () => {
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
-  //     rect.setAttribute('stroke', 'blue'); // Border color
-  //     rect.setAttribute('stroke-width', '2');
+  //     rect.setAttribute('strokeColor', 'blue'); // Border color
+  //     rect.setAttribute('strokeColor-width', '2');
   //     rect.setAttribute('id', 'rectangle');
   //     rect.style.pointerEvents = 'all'; // Allow pointer events on the entire rectangle
   //     currentRectangle = rect;
@@ -840,8 +840,8 @@ export class PolygonService {
   //     if (currentRectangle) {
   //       let ellipse = document.createElementNS(SVG_NAMESPACE, 'ellipse');
   //       ellipse.setAttribute('fill', 'rgba(0, 123, 255, 0.5)'); // Optional fill color for the ellipse
-  //       ellipse.setAttribute('stroke', 'blue'); // Border color for the ellipse
-  //       ellipse.setAttribute('stroke-width', '2');
+  //       ellipse.setAttribute('strokeColor', 'blue'); // Border color for the ellipse
+  //       ellipse.setAttribute('strokeColor-width', '2');
   //       ellipse.setAttribute('rx', radiusInput.toString()); // Set the x-radius
   //       ellipse.setAttribute('ry', radiusInput.toString()); // Set the y-radius
   //       ellipse.setAttribute('id', 'ellipse');
@@ -890,8 +890,8 @@ export class PolygonService {
   //         handle.setAttribute('fill', 'white');
   //         handle.setAttribute('width', '10');
   //         handle.setAttribute('height', '10');
-  //         handle.setAttribute('stroke', 'blue'); // Border color for the ellipse
-  //         handle.setAttribute('stroke-width', '2');
+  //         handle.setAttribute('strokeColor', 'blue'); // Border color for the ellipse
+  //         handle.setAttribute('strokeColor-width', '2');
   //         handle.setAttribute('cursor', cursor);
   //         handle.setAttribute('data-resize', position);
   //         handle.setAttribute('rx', '2.5'); // Border radius for the handle
