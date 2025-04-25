@@ -1,0 +1,105 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">Button</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="container grid grid-cols-2 gap-4 h-full w-full">
+      <div class="flex flex-col justify-center space-y-14 items-center">
+        <div class="w-4/6 space-y-4">
+          <div class="w-14">
+            <sc-badge>
+              <i class="ri-notification-4-line ri-2x leading-none"></i>
+            </sc-badge>
+          </div>
+          <div class="w-14">
+            <sc-badge [counter]="1000000000">
+              <i class="ri-notification-4-fill ri-2x leading-none"></i>
+            </sc-badge>
+          </div>
+          <div class="w-14">
+            <sc-badge flex>
+              <i class="ri-notification-4-line ri-2x leading-none"></i>
+            </sc-badge>
+          </div>
+          <div class="w-14">
+            <sc-badge [counter]="1000000000" flex>
+              <i class="ri-notification-4-fill ri-2x leading-none"></i>
+            </sc-badge>
+          </div>
+          <div>
+            <sc-button (click)="openModal()" variant="secondary">
+              <sc-badge flex backgroundColor="green" [counter]="100000000">
+                <span class="mr-[40px]">Open Modal</span>
+              </sc-badge>
+            </sc-button>
+          </div>
+          <div>
+            <sc-badge flex="normal" [counter]="1000000000"/>
+          </div>
+          <div>
+            <sc-button class="bg-primary-800" (click)="openLargeModal()">Open Large Modal</sc-button>
+          </div>
+          <div>
+            <sc-button variant="light" (click)="openLargeModal()">Open Large Modal</sc-button>
+          </div>
+          <div>
+            <sc-button variant="secondary" (click)="openDrawerModal()">Open Fullscreen Modal</sc-button>
+          </div>
+          <div>
+            <sc-button variant="ghost" (click)="sendInfoNotification()">Open Info Notification</sc-button>
+          </div>
+          <div>
+            <sc-button variant="destructive" (click)="sendDangerNotification()">Open Danger Notification</sc-button>
+          </div>
+          <div>
+            <sc-button variant="ghost" (click)="sendWarningNotification()">Open Warning Notification</sc-button>
+          </div>
+          <div>
+            <sc-button variant="ghost" (click)="sendSuccessNotification()">Open Success Notification</sc-button>
+          </div>
+          <div>
+            <sc-button [loading]="true" variant="destructive" block>Open folder</sc-button>
+          </div>
+          <div>
+            <sc-button [loading]="true" variant="destructive" [prefixIcon]="prefix" [suffixIcon]="suffix">Open folder</sc-button>
+            <ng-template #prefix>
+              <span class="material-icons text-xl">search</span>
+            </ng-template>
+            <ng-template #suffix>
+              <span class="material-icons text-xl">settings</span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    <div class="flex flex-col">
+    </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #formModal>
+  <div class="h-full w-full flex flex-col justify-center items-center p-[24px]">
+    <sc-tabs type="solid" [(ngModel)]="selected" (ngModelChange)="selected = $event">
+      <sc-tab-item [value]="1">
+        Preview More
+      </sc-tab-item>
+      <sc-tab-item [value]="2" [disabled]="true">
+        Preview More
+      </sc-tab-item>
+      <sc-tab-item [value]="3">
+        Preview More
+      </sc-tab-item>
+    </sc-tabs>
+    <div class="rounded-full flex items-center justify-center bg-red-100 w-[60px] h-[60px] mb-[16px]">
+      <i class="ri-logout-box-r-line text-2xl text-red-400" Tooltip tip="helo worled"></i>
+    </div>
+    <label class="text-[16px] font-[600] leading-[24px] text-slate-600">Log out ?</label>
+    <p class="text-[14px] text-slate-500 mb-[24px] text-center">Are you sure you want to log out ? <br> This will take you out of the platform and require you to log in.</p>
+    <div class="space-x-[8px] w-full flex">
+      <div class="w-full">
+        <sc-button block variant="secondary" (click)="myDrawer.close()">Cancel</sc-button>
+      </div>
+      <div class="w-full">
+        <sc-button block variant="destructive" (click)="selected = 3">Proceed</sc-button>
+      </div>
+    </div>
+  </div>
+</ng-template>

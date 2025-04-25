@@ -1,0 +1,7 @@
+.drawer {
+  pointer-events: none !important;
+}
+
+.drawer-content {
+  pointer-events: all !important;
+}

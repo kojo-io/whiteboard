@@ -1,0 +1,412 @@
+<div class="h-screen w-screen relative border-none" >
+  <div class="h-[5000px] w-[5000px] bg-white relative border-none wrapper" id="body-drag">
+    <div class="absolute top-0 left-0 w-[1012px] h-[637px]" [ngClass]="{'bg-white': !templateInfo.backgroundImage}" [ngStyle]="{backgroundImage: templateInfo.backgroundImage, backgroundSize: '100% 100%'}"></div>
+    <svg id="canvas" class="absolute top-0 left-0 w-[1012px] h-[637px]"
+         [ngStyle]="{
+       'background-image': templateInfo.showGrid ? ' linear-gradient(to right, ' + templateInfo.gridColor + ' 1px, transparent 1px), linear-gradient(to bottom, ' + templateInfo.gridColor + ' 1px, transparent 1px)' : '',
+       'background-size': templateInfo.grid + 'px ' + templateInfo.grid + 'px'
+     }"></svg>
+  </div>
+  <div class="fixed top-0 bottom-0 right-10 text-[12px]" id="toolbox">
+    <div *ngIf="showBackground" class="w-[250px] p-[20px] h-full">
+      <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div class="p-[8px] flex justify-between items-center">
+          <label class="text-[14px] font-semibold">Template</label>
+          <i class="ri-delete-bin-fill leading-none text-xl text-blue-600 cursor-pointer"></i>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <div class="w-full gap-[12px]">
+            <sc-label>Name</sc-label>
+            <sc-input [(ngModel)]="templateInfo.name"/>
+          </div>
+          <div class="w-full gap-[12px]">
+            <sc-label>Description</sc-label>
+            <sc-textarea-input [(ngModel)]="templateInfo.description"/>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Appearance</label>
+          <div class="w-full rounded h-48 border flex justify-center items-center bg-cover bg-no-repeat bg-center" [ngStyle]="{backgroundImage: templateInfo.backgroundImage}">
+            <sc-button (click)="bgUpdate.click()">
+              <div class="flex gap-2 items-center">
+                <i class="ri-image-edit-fill text-lg leading-none"></i>
+                <span>Browse</span>
+              </div>
+            </sc-button>
+          </div>
+          <div class="w-full">
+            <sc-number-input [prefixTemplate]="grid" [(ngModel)]="templateInfo.grid"/>
+            <ng-template #grid>
+              <small class="whitespace-nowrap">Grid size</small>
+            </ng-template>
+          </div>
+          <div class="w-full">
+            <div class="w-full flex gap-[4px] items-center justify-between border rounded-lg p-[4px]" (click)="gridColor.click()">
+              <small class="whitespace-nowrap">Grid color</small>
+              <div class="rounded-full border h-[20px] w-[20px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2] bg-white"></div>
+                <div class="absolute inset-0 z-[2]" [ngStyle]="{'background-color': templateInfo.gridColor}"></div>
+                <input #gridColor type="text" class="bg-coloris ext-white bg-white absolute inset-0 z-[1]" [(ngModel)]="templateInfo.gridColor">
+              </div>
+            </div>
+          </div>
+          <div class="w-full flex gap-[14px] items-center">
+            <sc-label>Show grid</sc-label>
+            <sc-check-box [(ngModel)]="templateInfo.showGrid"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-[250px] p-[20px] h-full" *ngIf="currentSVGElement">
+      <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div *ngIf="itemSelected.type === 'qrcode'" class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y flex flex-col">
+          <div class="p-[8px] flex justify-between items-center">
+            <label class="text-[14px] font-semibold">Qrcode</label>
+            <i class="ri-delete-bin-fill leading-none text-xl text-red-600 cursor-pointer" (click)="removeSVGElement()"></i>
+          </div>
+          <div class="grow h-full w-full divide-y">
+            <div class="p-[8px] flex flex-col gap-[8px]">
+              <label class="text-[14px] font-semibold">Position</label>
+              <div class="flex gap-[4px]">
+                <div class="w-full">
+                  <sc-input [prefixTemplate]="positionX" [(ngModel)]="itemSelected.positionX" [readOnly]="true"/>
+                  <ng-template #positionX>
+                    <label>X</label>
+                  </ng-template>
+                </div>
+                <div class="w-full">
+                  <sc-input [prefixTemplate]="positionY" [(ngModel)]="itemSelected.positionY" [readOnly]="true"/>
+                  <ng-template #positionY>
+                    <label>Y</label>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="p-[8px] flex flex-col gap-[8px]">
+              <label class="text-[14px] font-semibold">Layout</label>
+              <div class="flex gap-[4px]">
+                <div class="w-full">
+                  <sc-input [prefixTemplate]="width" [(ngModel)]="itemSelected.width" [readOnly]="true"/>
+                  <ng-template #width>
+                    <label>W</label>
+                  </ng-template>
+                </div>
+                <div class="w-full">
+                  <sc-input [prefixTemplate]="height" [(ngModel)]="itemSelected.height" [readOnly]="true"/>
+                  <ng-template #height>
+                    <label>H</label>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="p-[8px] flex flex-col gap-[8px]">
+              <label class="text-[14px] font-semibold">Appearance</label>
+              <div class="w-full">
+                <sc-textarea-input rows="4" placeholder="Text content here" [(ngModel)]="itemSelected.value" (ngModelChange)="updateTextData($event)"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-[250px] p-[20px] h-full" *ngIf="currentHTMLElement">
+      <div *ngIf="itemSelected.type === 'text box'" class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div class="p-[8px] flex justify-between items-center">
+          <label class="text-[14px] font-semibold">Text</label>
+          <i class="ri-delete-bin-fill leading-none text-xl text-red-600 cursor-pointer" (click)="removeHtmlElement()"></i>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Position</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionX" [(ngModel)]="itemSelected.positionX" [readOnly]="true"/>
+              <ng-template #positionX>
+                <label>X</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionY" [(ngModel)]="itemSelected.positionY" [readOnly]="true"/>
+              <ng-template #positionY>
+                <label>Y</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Layout</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="width" [(ngModel)]="itemSelected.width" [readOnly]="true"/>
+              <ng-template #width>
+                <label>W</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="height" [(ngModel)]="itemSelected.height" [readOnly]="true"/>
+              <ng-template #height>
+                <label>H</label>
+              </ng-template>
+            </div>
+          </div>
+
+      </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold font-">Typography</label>
+          <div class="w-full">
+            <sc-select [prefixTemplate]="weight" [(ngModel)]="itemSelected.fontWeight" (ngModelChange)="updateTextFontWeight($event)">
+              <sc-select-option label="Bold" [value]="700" [selected]="itemSelected.fontWeight === 700">Bold</sc-select-option>
+              <sc-select-option label="Semi Bold" [value]="600" [selected]="itemSelected.fontWeight === 600">Semi Bold</sc-select-option>
+              <sc-select-option label="Medium" [value]="500" [selected]="itemSelected.fontWeight === 500">Medium</sc-select-option>
+              <sc-select-option label="Normal" [value]="400" [selected]="itemSelected.fontWeight === 400">Normal</sc-select-option>
+              <sc-select-option label="Light" [value]="300" [selected]="itemSelected.fontWeight === 300">Light</sc-select-option>
+              <sc-select-option label="Lighter" [value]="200" [selected]="itemSelected.fontWeight === 200">Lighter</sc-select-option>
+              <sc-select-option label="Thin" [value]="100" [selected]="itemSelected.fontWeight === 100">Thin</sc-select-option>
+            </sc-select>
+            <ng-template #weight>
+              <small>Weight</small>
+            </ng-template>
+          </div>
+          <div class="w-full">
+            <sc-select [prefixTemplate]="style" [(ngModel)]="itemSelected.fontStyle" (ngModelChange)="updateTextFontStyle($event)">
+              <sc-select-option label="Normal" [value]="'normal'" [selected]="itemSelected.fontStyle === 'normal'">Normal</sc-select-option>
+              <sc-select-option label="Italic" [value]="'italic'" [selected]="itemSelected.fontStyle === 'italic'"><i>Italic</i></sc-select-option>
+            </sc-select>
+            <ng-template #style>
+              <small>Font Style</small>
+            </ng-template>
+          </div>
+          <div class="w-full">
+            <sc-select [prefixTemplate]="decoLine" [(ngModel)]="itemSelected.textDecorationLine" (ngModelChange)="updateTextDecoLine($event)">
+              <sc-select-option label="None" [value]="'none'" [selected]="itemSelected.textDecorationLine === 'none'">None</sc-select-option>
+              <sc-select-option label="Underline" [value]="'underline'" [selected]="itemSelected.textDecorationLine === 'underline'">
+                <span class="underline">Underline</span>
+              </sc-select-option>
+              <sc-select-option label="Overline" [value]="'overline'" [selected]="itemSelected.textDecorationLine === 'overline'">
+                <span class="overline">Overline</span>
+              </sc-select-option>
+              <sc-select-option label="Line Through" [value]="'line-through'" [selected]="itemSelected.textDecorationLine === 'line-through'">
+                <span class="line-through">Line Through</span>
+              </sc-select-option>
+            </sc-select>
+            <ng-template #decoLine>
+              <small>Decoration Line</small>
+            </ng-template>
+          </div>
+          <div class="w-full">
+            <sc-select [prefixTemplate]="decoLineStyle" [(ngModel)]="itemSelected.textDecorationStyle" (ngModelChange)="updateTextDecoStyle($event)">
+              <sc-select-option label="Solid" [value]="'solid'" [selected]="itemSelected.textDecorationStyle === 'solid'">
+                <span [ngStyle]="{textDecorationLine: itemSelected.textDecorationLine, textDecorationStyle: 'solid'}">Solid</span>
+              </sc-select-option>
+              <sc-select-option label="Double" [value]="'double'" [selected]="itemSelected.textDecorationStyle === 'double'">
+                <span [ngStyle]="{textDecorationLine: itemSelected.textDecorationLine, textDecorationStyle: 'double'}">Double</span>
+              </sc-select-option>
+              <sc-select-option label="Dotted" [value]="'dotted'" [selected]="itemSelected.textDecorationStyle === 'dotted'">
+                <span [ngStyle]="{textDecorationLine: itemSelected.textDecorationLine, textDecorationStyle: 'dotted'}">Dotted</span>
+              </sc-select-option>
+              <sc-select-option label="Dashed" [value]="'dashed'" [selected]="itemSelected.textDecorationStyle === 'dashed'">
+                <span [ngStyle]="{textDecorationLine: itemSelected.textDecorationLine, textDecorationStyle: 'dashed'}">Dashed</span>
+              </sc-select-option>
+              <sc-select-option label="Wavy" [value]="'wavy'" [selected]="itemSelected.textDecorationStyle === 'wavy'">
+                <span [ngStyle]="{textDecorationLine: itemSelected.textDecorationLine, textDecorationStyle: 'wavy'}">Wavy</span>
+              </sc-select-option>
+            </sc-select>
+            <ng-template #decoLineStyle>
+              <small>Decoration Style</small>
+            </ng-template>
+          </div>
+          <div class="w-full">
+            <sc-number-input [prefixTemplate]="decoLineThickness" [(ngModel)]="itemSelected.textDecorationThickness" (ngModelChange)="updateTextDecoThickness($event)"/>
+            <ng-template #decoLineThickness>
+              <small class="whitespace-nowrap">Decoration Thickness</small>
+            </ng-template>
+          </div>
+          <div class="flex gap-[4px]">
+            <div class="w-full flex bg-slate-200 rounded-md items-center p-[2px]">
+              <div class="w-full h-full rounded-md flex justify-center items-center" [ngClass]="{'bg-white': itemSelected.textAlign === 'left'}" (click)="updateTextAlignment('left')">
+                <i class="ri-align-left text-lg"></i>
+              </div>
+              <div class="w-full h-full rounded-md flex justify-center items-center" [ngClass]="{'bg-white': itemSelected.textAlign === 'center'}" (click)="updateTextAlignment('center')">
+                <i class="ri-align-center text-lg"></i>
+              </div>
+              <div class="w-full h-full rounded-md flex justify-center items-center" [ngClass]="{'bg-white': itemSelected.textAlign === 'right'}" (click)="updateTextAlignment('right')">
+                <i class="ri-align-right text-lg"></i>
+              </div>
+            </div>
+            <div class="w-full">
+              <sc-number-input [prefixTemplate]="size" [(ngModel)]="itemSelected.fontSize" (ngModelChange)="updateTextSize($event)"/>
+              <ng-template #size>
+                <small class="whitespace-nowrap">Size</small>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Appearance</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full flex gap-[4px] items-center justify-between border rounded p-0.5" (click)="color.click()">
+              <sc-label>Text color</sc-label>
+              <div class="rounded-full border h-[20px] w-[20px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2] bg-white"></div>
+                <div class="absolute inset-0 z-[2]" [ngStyle]="{'background-color': itemSelected.color}"></div>
+                <input #color type="text" class="bg-coloris ext-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.color" (ngModelChange)="updateTextColor($event)">
+              </div>
+            </div>
+            <div class="w-full flex gap-[4px] items-center justify-between border rounded p-0.5" (click)="bgcolor.click()">
+              <sc-label>Bg color</sc-label>
+              <div class="rounded-full border h-[20px] w-[20px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2] bg-white"></div>
+                <div class="absolute inset-0 z-[2]" [ngStyle]="{'background-color': itemSelected.backgroundColor}"></div>
+                <input #bgcolor type="text" class="bg-coloris ext-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.backgroundColor" (ngModelChange)="updateTextBgColor($event)">
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+            <sc-textarea-input rows="4" placeholder="Text content here" [(ngModel)]="itemSelected.value" (ngModelChange)="updateTextData($event)"/>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="itemSelected.type === 'barcode' || itemSelected.type === 'qrcode'" class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div class="p-[8px] flex justify-between items-center">
+          <label class="text-[14px] font-semibold">Barcode</label>
+          <i class="ri-delete-bin-fill leading-none text-xl text-red-600 cursor-pointer" (click)="removeHtmlElement()"></i>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Position</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionX" [(ngModel)]="itemSelected.positionX" [readOnly]="true"/>
+              <ng-template #positionX>
+                <label>X</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionY" [(ngModel)]="itemSelected.positionY" [readOnly]="true"/>
+              <ng-template #positionY>
+                <label>Y</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Layout</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="width" [(ngModel)]="itemSelected.width" [readOnly]="true"/>
+              <ng-template #width>
+                <label>W</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="height" [(ngModel)]="itemSelected.height" [readOnly]="true"/>
+              <ng-template #height>
+                <label>H</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Appearance</label>
+          <div class="w-full">
+            <sc-textarea-input rows="4" placeholder="Text content here" [(ngModel)]="itemSelected.value" (ngModelChange)="updateTextData($event)"/>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="itemSelected.type === 'image'" class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div class="p-[8px] flex justify-between items-center">
+          <label class="text-[14px] font-semibold">Image</label>
+          <i class="ri-delete-bin-fill leading-none text-xl text-red-600 cursor-pointer" (click)="removeHtmlElement()"></i>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Position</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionX" [(ngModel)]="itemSelected.positionX" [readOnly]="true"/>
+              <ng-template #positionX>
+                <label>X</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="positionY" [(ngModel)]="itemSelected.positionY" [readOnly]="true"/>
+              <ng-template #positionY>
+                <label>Y</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Layout</label>
+          <div class="flex gap-[4px]">
+            <div class="w-full">
+              <sc-input [prefixTemplate]="width" [(ngModel)]="itemSelected.width" [readOnly]="true"/>
+              <ng-template #width>
+                <label>W</label>
+              </ng-template>
+            </div>
+            <div class="w-full">
+              <sc-input [prefixTemplate]="height" [(ngModel)]="itemSelected.height" [readOnly]="true"/>
+              <ng-template #height>
+                <label>H</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="p-[8px] flex flex-col gap-[8px]">
+          <label class="text-[14px] font-semibold">Appearance</label>
+          <div class="w-full rounded h-48 border flex justify-center items-center bg-cover bg-no-repeat bg-center" [ngStyle]="{backgroundImage: getSelectedImage()}">
+            <sc-button (click)="photoUpdate.click()">
+              <div class="flex gap-2 items-center">
+                <i class="ri-image-edit-fill text-lg leading-none"></i>
+                <span>Browse</span>
+              </div>
+            </sc-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixed bottom-[10px] h-[48px] left-0 right-0 flex justify-center">
+    <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-slate-600">
+      <div [class.bg-purple-200]="shapeType === 'cursor'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+        <img src="cursor.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'text box'"
+           class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createText()">
+        <img src="text.png">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'qrcode'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="createQRcode()">
+        <img src="qrcode.svg">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'barcode'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="generateBarcode()">
+        <img src="barcode-read.svg">
+      </div>
+      <div [class.bg-purple-200]="shapeType === 'image'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" (click)="photo.click()">
+        <img src="add-image.svg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" accept="image/*" (change)="selectImage($event, photo)" #photo hidden>
+<input type="file" accept="image/*" (change)="updatePhoto($event, photoUpdate)" #photoUpdate hidden>
+<input type="file" accept="image/*" (change)="backgroundImage($event, bgUpdate)" #bgUpdate hidden>
+
+<ng-template #cropper>
+  <div class="h-full w-[600px] flex flex-col justify-center items-center p-[16px]">
+    <div class="w-full flex justify-between items-start mb-[16px]">
+      <label class="text-[18px] font-[500] leading-[24px] text-slate-600 uppercase">Crop Image</label>
+      <i class="ri-close-large-line text-[#374151] cursor-pointer font-bold" (click)="closeCropper()"></i>
+    </div>
+    <div class="w-full mb-[24px] space-y-[8px]">
+      <img id="processCrop">
+    </div>
+    <div class="space-x-[8px] w-full flex">
+      <div class="w-full">
+        <sc-button block variant="secondary" (click)="closeCropper()">Cancel</sc-button>
+      </div>
+      <div class="w-full">
+        <sc-button block (click)="processCrop()"> Submit </sc-button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

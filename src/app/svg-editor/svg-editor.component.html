@@ -1,77 +1,53 @@
-<div class="h-screen w-screen relative">
-  <div class="h-[1000000px] w-[1000000px] bg-white relative" id="body-drag">
-    <svg id="canvas" class="w-full h-full absolute top-0 left-0"></svg>
+<div class="h-screen w-screen relative border-none" >
+  <div class="h-[5000px] w-[5000px] bg-white relative border-none wrapper" id="body-drag">
+    <svg id="canvas" class="absolute top-0 left-0 w-[1012px] h-[637px] bg-white"></svg>
   </div>
-  <div class="fixed top-0 bottom-0 left-0" id="toolbox">
+  <div class="fixed top-0 right-10 text-[12px]" id="toolbox">
     <div class="w-[250px] p-[20px] h-full" *ngIf="currentSVGElement">
-      <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] p-[8px] divide-y">
-        <div>
-          <label >Stroke</label>
-          <div class="px-[4px] space-y-[4px]">
-            <label>Color</label>
+      <div class="w-[250px] h-full bg-white shadow-xl border rounded-[0.5rem] divide-y">
+        <div class="p-[8px]">
+          <label class="text-lg font-semibold">Stroke</label>
+          <div class="px-[4px] py-[2px]">
             <div class="flex items-center space-x-4">
               <div class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden relative flex items-baseline cursor-pointer">
+                <div class="absolute inset-0 z-[2] bg-white"></div>
                 <div class="absolute inset-0 z-[2]" (click)="color.click()" [ngStyle]="{'background-color': itemSelected.strokeColor}"></div>
-                <input #color type="color" class="text-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.strokeColor" (ngModelChange)="updateSVGStrokeColor($event)">
+                <input #color type="text" class="bg-coloris ext-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.strokeColor" (ngModelChange)="updateSVGStrokeColor($event)">
               </div>
-              <label class="text-xs whitespace-nowrap" (click)="generateRandom2()">Generate Random 2 Colors</label>
+              <label>{{colorName(itemSelected.strokeColor ?? '')}}</label>
             </div>
           </div>
-          <div class="px-[4px] space-y-[4px]">
-            <label >Color</label>
-            <div class="grid grid-cols-2 gap-0.5">
-              <div *ngFor="let strokeColor of mainTwo" class="rounded-[0.5rem] border h-[36px] w-full overflow-hidden cursor-pointer flex justify-center items-center" (click)="updateSVGStrokeColor2(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
-                <label>{{colorName(strokeColor)}}</label>
-              </div>
-            </div>
-            <div class="grid grid-cols-4 gap-0.5">
-              <div *ngFor="let strokeColor of strokeColors" class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden cursor-pointer" (click)="updateSVGStrokeColor2(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
-              </div>
-            </div>
-          </div>
-          <div class="px-[4px]">
+          <div class="px-[4px] py-[2px]">
             <label>Width</label>
-            <div class="flex space-x-[4px] items-center">
-              <input class="outline-0 border rounded" [min]="2" [max]="4" type="range" [(ngModel)]="itemSelected.strokeWidth"  (ngModelChange)="updateSVGStrokeWidth($event)">
-            </div>
+            <sc-number-input [max]="4" [min]="1" [(ngModel)]="itemSelected.strokeWidth"  (ngModelChange)="updateSVGStrokeWidth($event)"/>
           </div>
-          <div class="px-[4px]">
+          <div class="px-[4px] py-[2px]">
             <label>Sides</label>
-            <div class="flex space-x-[4px] items-center">
-              <input class="outline-0 border rounded" [min]="3" [max]="16" type="range" [(ngModel)]="itemSelected.numberOfPoints"  (ngModelChange)="updateSVGSides()">
-            </div>
+            <sc-number-input [max]="16" [min]="3"  [(ngModel)]="itemSelected.numberOfPoints"  (ngModelChange)="updateSVGSides()"/>
+          </div>
+          <div class="px-[4px] py-[2px]">
+            <label>Rounded</label>
+            <sc-number-input [min]="0"  [(ngModel)]="itemSelected.radius"  (ngModelChange)="updateSVGRadius($event)"/>
           </div>
         </div>
-        <div>
-          <label >Fill</label>
-          <div class="px-[4px] space-y-[4px]">
-            <label>Color</label>
+        <div class="p-[8px]">
+          <label class="text-lg font-semibold">Fill</label>
+          <div class="px-[4px] py-[2px]">
             <div class="flex items-center space-x-4">
               <div class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden relative flex items-baseline cursor-pointer">
-                <div class="absolute inset-0 z-[2]" (click)="color.click()" [ngStyle]="{'background-color': itemSelected.strokeColor}"></div>
-                <input #color type="color" class="text-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.strokeColor" (ngModelChange)="updateSVGFillColor($event)">
+                <div class="absolute inset-0 z-[2] bg-white"></div>
+                <div class="absolute inset-0 z-[2]" (click)="fill.click()" [ngStyle]="{'background-color': itemSelected.fill}"></div>
+                <input #fill type="text" class="bg-coloris text-white bg-white absolute inset-0 z-[1]" [(ngModel)]="itemSelected.fill" (ngModelChange)="updateSVGFillColor($event)">
               </div>
-              <label class="text-xs whitespace-nowrap" (click)="generateRandom2()">Generate Random 2 Colors</label>
-            </div>
-          </div>
-          <div class="px-[4px] space-y-[4px]">
-            <label >Color</label>
-            <div class="grid grid-cols-2 gap-0.5">
-              <div *ngFor="let strokeColor of mainTwo" class="rounded-[0.5rem] border h-[36px] w-full overflow-hidden cursor-pointer flex justify-center items-center" (click)="updateSVGFillColor(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
-                <label>{{colorName(strokeColor)}}</label>
-              </div>
-            </div>
-            <div class="grid grid-cols-4 gap-0.5">
-              <div *ngFor="let strokeColor of strokeColors" class="rounded-[0.5rem] border h-[36px] w-[36px] overflow-hidden cursor-pointer" (click)="updateSVGFillColor(strokeColor)" [ngStyle]="{'background-color': strokeColor}">
-              </div>
+              <label>{{colorName(itemSelected.fill ?? '')}}</label>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="fixed top-[8px] h-[48px] left-0 right-0 flex justify-center">
-    <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-gray-100">
+  <div class="fixed bottom-[10px] h-[48px] left-0 right-0 flex justify-center">
+    <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-slate-600">
       <div [class.bg-purple-200]="shapeType === 'cursor'" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
         <img src="cursor.png">
       </div>

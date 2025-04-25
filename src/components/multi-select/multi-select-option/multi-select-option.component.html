@@ -1,0 +1,7 @@
+<div (click)="select()" class="w-full px-[4px] cursor-pointer">
+  <div class="w-full hover:bg-gray-100 rounded">
+    <div [ngClass]="{'text-[14px] leading-[20px] text-[#374151] p-[4px]': !template}">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

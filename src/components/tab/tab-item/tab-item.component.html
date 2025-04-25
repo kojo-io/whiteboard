@@ -1,0 +1,13 @@
+<div
+  #button
+  [ngClass]="{
+  'text-hover': selected && type === 'line',
+  'text-[#667085]': selected && type === 'solid' || disabled,
+  'cursor-not-allowed': disabled,
+  'cursor-pointer': !disabled,
+  'px-[12px]': type === 'line',
+  'px-4' : type === 'solid',
+  }"
+  class="text-[14px] w-full text-center flex items-center justify-center h-[32px]" (click)="selectItem()">
+  <ng-content></ng-content>
+</div>

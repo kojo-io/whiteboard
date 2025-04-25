@@ -1,0 +1,9 @@
+<div id="toggle-component" class="flex items-center max-w-max" (click)="input.click()">
+  <input [disabled]="disabled" id="{{id}}" #input [(ngModel)]="toggled" (ngModelChange)="toggle($event)" type="checkbox" value="" class="sr-only peer">
+  <div id="toggle" class="relative w-[38px] h-[22px] bg-[#F2F4F7] rounded-full cursor-pointer border border-gray-300 box-content"
+       [ngClass]="{'bg-primary border-primary': toggled}" >
+    <div id="toggle-circle"
+         class="absolute top-0.5 left-0.5 w-[16px] h-[16px] bg-white rounded-full shadow-md transition-transform border box-content"
+         [ngClass]="{'translate-x-[1rem] border-primary': toggled, 'translate-x-[0]': !toggled}"></div>
+  </div>
+</div>

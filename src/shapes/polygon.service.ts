@@ -27,7 +27,7 @@ export class PolygonService {
   //   let pointsInput: number = 0;
   //
   //
-  //   const createRectangle = () => {
+  //   const createQRcode = () => {
   //     pointsInput++;
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
@@ -347,7 +347,7 @@ export class PolygonService {
   //
   //       rectStartPoint = [startX, startY];
   //
-  //       createRectangle();
+  //       createQRcode();
   //       createPolygon();
   //
   //       isDrawing = true;
@@ -435,7 +435,7 @@ export class PolygonService {
   //   let pointsInput: number = 0;
   //
   //
-  //   const createRectangle = () => {
+  //   const createQRcode = () => {
   //     pointsInput++;
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
@@ -738,7 +738,7 @@ export class PolygonService {
   //
   //       rectStartPoint = [startX, startY];
   //
-  //       createRectangle();
+  //       createQRcode();
   //       createSquare();
   //
   //       isDrawing = true;
@@ -804,7 +804,7 @@ export class PolygonService {
   //   let offsetY: number;
   //   let radiusInput: number = 50; // Default radius for the circle
   //
-  //   const createRectangle = () => {
+  //   const createQRcode = () => {
   //     let rect = document.createElementNS(SVG_NAMESPACE, 'rect');
   //     rect.setAttribute('fill', 'none'); // No fill color
   //     rect.setAttribute('strokeColor', 'blue'); // Border color
@@ -1069,7 +1069,7 @@ export class PolygonService {
   //       isDrawing = true;
   //       startX = event.offsetX;
   //       startY = event.offsetY;
-  //       createRectangle();
+  //       createQRcode();
   //       createEllipse(); // Create ellipse when rectangle is created
   //     } else if (event.target instanceof SVGRectElement) {
   //       if (event.target.getAttribute('id') === 'rectangle') {

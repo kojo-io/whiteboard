@@ -1,0 +1,20 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">Date & Calendar</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="grid grid-cols-2 gap-4 h-full w-full">
+      <div class="flex flex-col">
+        <div class="w-72 mb-5 relative">
+          <sc-date-picker name="date" [(ngModel)]="date" mode="year"/>
+        </div>
+        <div class="w-72 mb-5 relative">
+         <sc-date-range-picker [(ngModel)]="selectedDate" (ngModelChange)="dateChanged($event)"/>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center items-center space-y-4">
+        <sc-calendar-mini [(ngModel)]="date"/>
+        <sc-calendar-range [(ngModel)]="selectedDate1" (ngModelChange)="dateChanged($event)"/>
+      </div>
+    </div>
+  </div>
+
+</div>

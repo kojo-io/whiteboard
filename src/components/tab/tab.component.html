@@ -1,0 +1,12 @@
+<div class="relative opacity-[1] h-[36px] flex items-center" [ngClass]="{'max-w-max': stretch === undefined && type === 'solid', 'rounded-[10px] bg-[#F3F4F6]': type === 'solid', 'border-b': type === 'line'}">
+  <!-- Background Highlighter -->
+  <div #activeBg
+       [@moveActiveBg]
+       [ngClass]="{'rounded-[6px] bg-white shadow border-[1px] border-solid border-[#E4E7EC] top-[2px] bottom-[2px]': type === 'solid', 'bg-hover -bottom-[1px] h-[2px]' : type === 'line'}"
+       class="absolute transition-all duration-500 ease-in-out"></div>
+
+  <!-- Tab Buttons -->
+  <div class="flex relative items-center w-full">
+    <ng-content select="sc-tab-item"></ng-content>
+  </div>
+</div>

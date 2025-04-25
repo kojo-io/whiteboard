@@ -1,0 +1,121 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">sc-tabs</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="container grid grid-cols-2 gap-4 h-full w-full">
+      <div class="flex flex-col justify-center space-y-14">
+        <sc-tabs type="solid" [(ngModel)]="selected" (ngModelChange)="selected = $event">
+          <sc-tab-item [value]="1">
+            Preview More
+          </sc-tab-item>
+          <sc-tab-item [value]="2" [disabled]="true">
+            Preview More
+          </sc-tab-item>
+          <sc-tab-item [value]="3">
+            Preview More
+          </sc-tab-item>
+        </sc-tabs>
+        <sc-tabs type="line" [ngModel]="'1'">
+          <sc-tab-item value="1">
+            Preview More
+          </sc-tab-item>
+          <sc-tab-item value="2">
+            Preview More
+          </sc-tab-item>
+          <sc-tab-item value="3">
+            Preview
+          </sc-tab-item>
+        </sc-tabs>
+
+        <sc-tabs type="solid" [ngModel]="'1'">
+          <sc-tab-item value="1">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="2">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="3">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+        </sc-tabs>
+        <sc-tabs type="line" [ngModel]="'2'">
+          <sc-tab-item value="1">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="2">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="3">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+        </sc-tabs>
+
+        <sc-tabs type="solid" stretch [ngModel]="'3'">
+          <sc-tab-item value="1">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="2">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="3">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+        </sc-tabs>
+        <sc-tabs type="line" stretch selected="1">
+          <sc-tab-item value="1">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="2">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+          <sc-tab-item value="3">
+            <div class="flex space-x-2 justify-center items-center">
+              <i class="material-icons text-xl">preview</i>
+              <span>Preview More</span>
+            </div>
+          </sc-tab-item>
+        </sc-tabs>
+      </div>
+      <div class="flex flex-col">
+        <div class="h-full w-full flex justify-center">
+          <div class="shj-lang-html" style="font-size: 14px !important;">
+            {{editor}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

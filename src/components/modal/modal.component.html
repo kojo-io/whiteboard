@@ -1,0 +1,25 @@
+<div [id]="id"
+     class="modal fixed inset-0 z-[999] flex flex-col h-full w-full justify-center items-center">
+
+  <!-- Apply Angular animation state trigger -->
+  <div class="modal-content {{modalCss}}"
+       [ngStyle]="{'height': modalSize !== 'fullscreen' ? height : ''}"
+       [@modalState]="open ? 'open' : 'closed'">
+
+    <!-- Content rendering based on contentType -->
+    <div class="bg-white h-full flex flex-col justify-center items-center overflow-auto"
+         [ngClass]="{'rounded-[8px]': rounded, 'shadow-sm': modalSize !== 'fullscreen'}">
+      @switch (contentType) {
+        @case ('string') {
+          <div [innerHTML]="content"></div>
+        }
+        @case ('template') {
+          <ng-container *ngTemplateOutlet="$any(content); context: context"></ng-container>
+        }
+        @case ('component') {
+          <ng-container *ngComponentOutlet="$any(content)"></ng-container>
+        }
+      }
+    </div>
+  </div>
+</div>

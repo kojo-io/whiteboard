@@ -1,0 +1,32 @@
+<div [id]="id"
+     class="drawer fixed inset-0 z-[999] h-screen w-screen flex"
+     [ngClass]="{
+       'justify-start': position === 'left',
+       'justify-end': position === 'right'
+     }">
+
+  <!-- Apply Angular animation state trigger for drawer -->
+  <div class="drawer-content border"
+       [ngStyle]="{ 'width': drawerSize === 'fullscreen' ? '100%' : width }"
+       [@drawerState]="{ value: open ? 'open' : 'closed', params: { closedPosition: position === 'left' ? '-100%' : '100%' }}">
+    <div class="bg-white h-full w-full"
+         [ngClass]="{
+           'shadow-sm': drawerSize !== 'fullscreen'
+         }">
+
+      <!-- Content rendering based on contentType -->
+      <ng-container *ngIf="contentType === 'string'">
+        <div [innerHTML]="content"></div>
+      </ng-container>
+
+      <ng-container *ngIf="contentType === 'template'">
+        <ng-container *ngTemplateOutlet="$any(content); context: context"></ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="contentType === 'component'">
+        <ng-container *ngComponentOutlet="$any(content)"></ng-container>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

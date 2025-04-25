@@ -1,0 +1,73 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">Pagination</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="container grid grid-cols-1 gap-4 h-full w-full">
+      <div class="flex flex-col justify-center space-y-14 items-center">
+        <div class="w-full space-y-4">
+          <div>
+            <sc-indeterminate-progress-bar rounded></sc-indeterminate-progress-bar>
+          </div>
+          <div>
+            <sc-pagination [showPageOptions]="false"/>
+          </div>
+          <div>
+            <sc-pagination
+              [showPageLinks]="true"
+              [showPageOptions]="false"
+              [showCurrentPageInfo]="false"
+              [totalPages]="10"
+              [totalRecords]="9"/>
+          </div>
+          <div>
+            <sc-pagination
+              [showPageLinks]="true"
+              [showPageOptions]="true"
+              [showCurrentPageInfo]="true"
+              [totalPages]="10"
+              [totalRecords]="9"/>
+          </div>
+          <div>
+            <sc-pagination
+              [showPageLinks]="true"
+              [showPageOptions]="true"
+              [showCurrentPageInfo]="true"
+              [totalPages]="10"
+              currentPageInfoTemplate="Showing {first} to {last} of {totalRecords}"
+              [totalRecords]="120"/>
+          </div>
+          <div>
+            <sc-pagination
+              [totalPages]="20"
+              [totalRecords]="2000"
+              [currentPageSize]="100"
+              [showCurrentPageInfo]="true"
+              currentPageInfoTemplate="{first} - {last} of {totalRecords}"
+              [pageSizeOptions]="[100, 200, 300, 400, 500, 600]"/>
+          </div>
+          <div>
+            <sc-pagination
+              [showPageLinks]="false"
+              [showPageOptions]="false"
+              [showCurrentPageInfo]="true"
+              [totalPages]="10"
+              currentPageInfoTemplate="Showing {first} to {last} of {totalRecords}"
+              [totalRecords]="120"/>
+          </div>
+          <div>
+            <sc-pagination
+              [totalPages]="20"
+              [totalRecords]="2000"
+              [currentPageSize]="100"
+              [pageSizeOptions]="[100, 200, 300, 400, 500, 600]"/>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="h-full w-full flex justify-center">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,6 @@
+<div class="px-[8px] py-[6px] bg-gray-100 border border-gray-100" (click)="$event.stopImmediatePropagation()">
+  <sc-input [prefixTemplate]="search" name="search" [placeholder]="'Search'" [(ngModel)]="searchData" (ngModelChange)="filter($event)"></sc-input>
+  <ng-template #search>
+    <i class="ri-search-2-line text-[#9CA3AF]"></i>
+  </ng-template>
+</div>

@@ -1,0 +1,19 @@
+<div [ngClass]="{'max-w-max max-h-max': flex === undefined || flex === 'normal', 'flex items-center justify-between': flex === ''}" class="relative">
+  <div *ngIf="flex === undefined" class="absolute border-[2.5px] border-white box-content rounded-full"
+       [ngStyle]="{ right: rightPosition+'px', top: topPosition+'px', backgroundColor: backgroundColor, color: color}"
+       [ngClass]="{'text-[10px] text-semibold px-[8px] py-[1px]': counter > 0,
+       'h-[12px] w-[12px]': counter == 0}">
+    @if (counter > 0) {
+      {{formatCount(counter)}}
+    }
+  </div>
+  @if (flex !== 'normal') {
+    <ng-content></ng-content>
+  }
+  <div *ngIf="flex !== undefined" class="rounded-full flex items-center" [ngStyle]="{backgroundColor: backgroundColor, color: color}" [ngClass]="{'text-[10px] text-semibold px-[8px] py-[1px]': counter > 0,
+       'h-[12px] w-[12px]': counter == 0}">
+    @if (counter > 0) {
+      <span>{{formatCount(counter)}}</span>
+    }
+  </div>
+</div>

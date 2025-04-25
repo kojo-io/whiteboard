@@ -1,0 +1,51 @@
+<div class="pr-[10px] py-[8px] rounded-[8px] flex items-center border-[1px] h-[36px]"
+     [ngClass]="{
+     'bg-[#F9FAFB] cursor-not-allowed': disabled,
+     'bg-white': !disabled,
+     'border-[#E5E7EB]': !invalid && !focused,
+     'ring-2 ring-secondary border-primary' : focused && !invalid,
+     'ring-2 ring-red-200 border-red-500': touched && invalid
+     }">
+  <div class="flex items-center space-x-[4px] pl-[10px]"
+       [ngClass]="{'cursor-not-allowed': disabled, 'cursor-pointer':!disabled}"
+       DropDown
+       (click)="onClick()"
+       [disabled]="disabled"
+       [menu]="menuElement"
+       position="bottom-start">
+    <img [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,'+selectedCountry?.flag)" class="rounded border">
+    <i class="ri-arrow-down-s-line" [ngClass]="{'rotate-180': flagClicked}"></i>
+  </div>
+  <input #phoneInput [(ngModel)]="model"
+         (ngModelChange)="onInput($event)"
+         class="flex-grow outline-0 disabled:bg-[#F9FAFB] disabled:cursor-not-allowed text-[14px] h-[20px] text-[#667085] placeholder:text-[14px] placeholder:text-[#667085]'"
+         (keydown)="onKeyDown($event)"
+         (paste)="$event.preventDefault()"
+         [name]="name"
+         [type]="type"
+         (blur)="onBlur()"
+         (focus)="onFocus()"
+         [disabled]="disabled"
+         [readOnly]="readOnly"
+         [id]="id"
+         [placeholder]="placeholder">
+</div>
+
+<div #menuElement class="absolute z-10 dropdown-menu-list hidden py-[4px]">
+  <div class="border border-gray-100 rounded-lg min-w-[420px] max-h-[500px] flex flex-col divide-y bg-white shadow overflow-auto">
+    <div class="px-[8px] py-[6px] bg-gray-100 border border-gray-100" (click)="$event.stopImmediatePropagation()">
+      <sc-input inputGroup [prefixTemplate]="search" name="search" [placeholder]="'Search'" [(ngModel)]="searchValue" (ngModelChange)="filterCountries($event)"></sc-input>
+      <ng-template #search>
+        <i class="ri-search-2-line text-[#9CA3AF]"></i>
+      </ng-template>
+    </div>
+   <div class="w-full divide-y grow h-full overflow-auto">
+     @for (item of shadowCountries; track item.id) {
+       <div class="px-[12px] py-[10px] cursor-pointer hover:bg-[#E5E7EB] flex items-center space-x-[8px]" (click)="selectCountryCode(item)">
+         <img [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,'+item.flag)" class="rounded border">
+         <span class="text-[14px] leading-[20px] text-[#374151]">{{item.name}}</span>
+       </div>
+     }
+   </div>
+  </div>
+</div>

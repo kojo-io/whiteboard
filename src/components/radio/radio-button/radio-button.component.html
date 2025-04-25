@@ -1,0 +1,8 @@
+<label class="flex items-center cursor-pointer container">
+  <input #inputElement [disabled]="disabled" name="{{name}}" type="radio" [checked]="checked" class="sr-only peer" (click)="selectItem($event)">
+  <div class="mark bg-gray-200 border border-gray-300 w-4 h-4 rounded-full hover:bg-gray-300 peer-checked:bg-blue-600
+  after:bg-white after:w-full after:h-full after:rounded-full peer-checked:p-1 peer-checked:flex peer-checked:items-center peer-checked:justify-center"></div>
+  <div>
+    <ng-content></ng-content>
+  </div>
+</label>

@@ -34,11 +34,17 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor/min/vs",
+                "output": "/assets/monaco/vs"
               }
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/@melloware/coloris/dist/coloris.css"
+              "node_modules/@melloware/coloris/dist/coloris.css",
+              "node_modules/@speed-highlight/core/dist/themes/github-dim.css"
             ],
             "scripts": []
           },

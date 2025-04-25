@@ -1,0 +1,32 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">Numeric Input</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="container grid grid-cols-2 gap-4 h-full w-full">
+      <div class="flex flex-col justify-center space-y-14 items-center">
+        <div class="w-4/6 space-y-4">
+          <div>
+            <sc-number-input name="search" [max]="5" [min]="1" [required]="true"/>
+          </div>
+          <div>
+            <sc-number-input name="search" [prefixTemplate]="search"  [required]="true"/>
+            <ng-template #search>
+              <i class="material-icons text-xl text-[#9CA3AF]">tag</i>
+            </ng-template>
+          </div>
+          <div>
+            <Label for="count">Counter</Label>
+            <sc-number-input id="count" name="count" [readOnly]="true" [required]="true" [placeholder]="'Counter'"/>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="h-full w-full flex justify-center">
+          <div class="shj-lang-html w-full" style="font-size: 14px !important;">
+            {{editor}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

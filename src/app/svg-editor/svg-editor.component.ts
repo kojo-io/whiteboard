@@ -2,7 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {ElementInfo} from "../../models/element-info";
 import {timer} from "rxjs";
 import namer from "color-namer";
-import chroma from "chroma-js";
+import {coloris, init} from "@melloware/coloris";
+import {PolygonElement} from "../../models/polygonElement";
+import {TextBoxElement} from "../../models/text-box-element";
+import {ImageElement} from "../../models/image-element";
 
 @Component({
   selector: 'app-svg-editor',
@@ -33,12 +36,31 @@ export class SvgEditorComponent implements OnInit {
   svgCanvas!: SVGSVGElement;
 
   ngOnInit(): void {
+    init();
+    coloris({
+      el: '.bg-coloris',
+      theme: 'polaroid',
+      themeMode: 'dark',
+      formatToggle: true,
+      closeButton: true,
+      clearButton: true,
+      swatches: [
+        '#067bc2',
+        '#84bcda',
+        '#80e377',
+        '#ecc30b',
+        '#f37748',
+        '#d56062'
+      ]
+    });
+
     this.body = document.querySelector('#body-drag') as HTMLDivElement;
     this.toolBox = document.querySelector('#toolbox') as HTMLDivElement;
     this.svgCanvas = document.querySelector('#canvas') as SVGSVGElement;
     this.toolBox.addEventListener('click', (e) => {
-      e.stopPropagation();
+      // e.stopPropagation();
     })
+
     this.svgCanvas.addEventListener('click', (e) => {
       if (this.isDrawing) {
         return;
@@ -143,7 +165,6 @@ export class SvgEditorComponent implements OnInit {
         this.currentRectangle = rect;
         this.currentSVGElement = poly;
         this.itemSelected = this.elements.find(element => element.id === id) as ElementInfo;
-
         updateHandles(); // Update handles when rectangle is clicked
         this.updatePolygon();
       });
@@ -160,22 +181,22 @@ export class SvgEditorComponent implements OnInit {
           height: 0,
           id: id,
           points: [],
-          positonX: startX,
-          positonY: startY,
+          positionX: startX,
+          positionY: startY,
           radius: 0,
           strokeColor: "black",
           strokeWidth: 2,
           type: 'polygon',
           width: 0,
           numberOfPoints: 3
-        }
+        };
 
         let poly = document.createElementNS(SVG_NAMESPACE, 'polygon');
-        poly.setAttribute('fill', this.itemSelected.fill); // Optional fill color for the polygon
-        poly.setAttribute('stroke', this.itemSelected.strokeColor); // Border color for the polygon
-        poly.setAttribute('strokeColor-width', this.itemSelected.strokeWidth.toString());
-        poly.setAttribute('rx', this.itemSelected.radius.toString()); // Set the x-radius
-        poly.setAttribute('ry', this.itemSelected.radius.toString());
+        poly.setAttribute('fill', <string>this.itemSelected.fill); // Optional fill color for the polygon
+        poly.setAttribute('stroke', <string>this.itemSelected.strokeColor); // Border color for the polygon
+        poly.setAttribute('strokeColor-width', <string>this.itemSelected.strokeWidth?.toString());
+        poly.setAttribute('rx', <string>this.itemSelected.radius?.toString()); // Set the x-radius
+        poly.setAttribute('ry', <string>this.itemSelected.radius?.toString());
         poly.setAttribute('id', `${id}${this.itemSelected.type}`);
         poly.style.pointerEvents = 'none'; // Disable pointer events for the polygon
         this.svgCanvas.appendChild(poly);
@@ -184,46 +205,6 @@ export class SvgEditorComponent implements OnInit {
       }
       return null;
     };
-
-    // const updatePolygon = () => {
-    //   // console.log(this.selectedItemId);
-    //   if (this.currentRectangle && this.currentSVGElement) {
-    //     const rectX = parseFloat(this.currentRectangle.getAttribute('x')!);
-    //     const rectY = parseFloat(this.currentRectangle.getAttribute('y')!);
-    //     const width = parseFloat(this.currentRectangle.getAttribute('width')!);
-    //     const height = parseFloat(this.currentRectangle.getAttribute('height')!);
-    //
-    //     const margin = 8; // Define the margin between the polygon and rectangle
-    //
-    //     const points: [number, number][] = [];
-    //     const centerX = rectX + width / 2;
-    //     const centerY = rectY + height / 2;
-    //
-    //     if (numberOfPoints === 3) {
-    //       const pointA: [number, number] = [centerX - (width / 2) + margin, centerY + (height / 2) - margin];
-    //       const pointB: [number, number] = [centerX + (width / 2) - margin, centerY + (height / 2) - margin];
-    //       const pointC: [number, number] = [centerX, centerY - (height / 2) + margin];
-    //       points.push(pointA, pointB, pointC);
-    //     } else {
-    //       // Regular polygon
-    //       const radiusX = (width / 2) - margin;
-    //       const radiusY = (height / 2) - margin;
-    //       const angleStep = (2 * Math.PI) / numberOfPoints;
-    //
-    //       for (let i = 0; i < numberOfPoints; i++) {
-    //         const angle = i * angleStep - Math.PI / 2; // Start from the top
-    //         const x = centerX + radiusX * Math.cos(angle);
-    //         const y = centerY + radiusY * Math.sin(angle);
-    //         points.push([x, y]);
-    //       }
-    //     }
-    //     this.itemSelected.points = points;
-    //     const pointsAttr = points.map(point => point.join(',')).join(' ');
-    //     if (pointsAttr) {
-    //       this.currentSVGElement?.setAttribute('points', pointsAttr);
-    //     }
-    //   }
-    // };
 
     const addResizeHandles = () => {
       if (this.currentRectangle) {
@@ -329,8 +310,8 @@ export class SvgEditorComponent implements OnInit {
 
       // Update rectangle's attributes
       if (this.currentRectangle) {
-        this.itemSelected.positonX = posX;
-        this.itemSelected.positonY = posY;
+        this.itemSelected.positionX = posX;
+        this.itemSelected.positionY = posY;
         this.itemSelected.width = width;
         this.itemSelected.height = height;
 
@@ -1025,6 +1006,7 @@ export class SvgEditorComponent implements OnInit {
         textInput.style.lineHeight = '1.1';
         textInput.contentEditable = 'true';
         textInput.id = `${id}textInput`;
+        textInput.style.zIndex = '1';
 
         this.currentInputElement = textInput;
 
@@ -1202,7 +1184,6 @@ export class SvgEditorComponent implements OnInit {
 
       updateTextPosition();
     }
-
 
     const startDragging = (e: MouseEvent) => {
       if (this.currentRectangle) {
@@ -2729,15 +2710,18 @@ export class SvgEditorComponent implements OnInit {
 
   updateSVGFillColor(color: string) {
     if (this.currentSVGElement) {
-      console.log(namer(color).pantone[0]);
       this.currentSVGElement.setAttribute('fill', color);
     }
   }
 
-  updateSVGStrokeColor2(color: string) {
+  updateSVGRadius(rad: number) {
     if (this.currentSVGElement) {
-      this.currentSVGElement.setAttribute('stroke', color);
+      this.updatePolygonPathWithCornerRadius(rad);
     }
+  }
+
+  colorName(color: string): string {
+    return color === 'transparent' ? 'Transparent' : namer(color).pantone[0].name;
   }
 
   updateSVGSides() {
@@ -2762,7 +2746,7 @@ export class SvgEditorComponent implements OnInit {
       const width = parseFloat(this.currentRectangle.getAttribute('width')!);
       const height = parseFloat(this.currentRectangle.getAttribute('height')!);
 
-      const padding = 8 + this.itemSelected.strokeWidth; // Define padding to ensure tips do not get cut off
+      const padding = 8 + this.itemSelected.strokeWidth!; // Define padding to ensure tips do not get cut off
 
       const innerWidth = width - 4 * padding;
       const innerHeight = height - 4 * padding;
@@ -2771,7 +2755,7 @@ export class SvgEditorComponent implements OnInit {
 
       const points: [number, number][] = [];
 
-      if (this.itemSelected.numberOfPoints === 3) {
+      if ((this.itemSelected as PolygonElement).numberOfPoints === 3) {
         // Triangle
         const pointA: [number, number] = [centerX - innerWidth / 2, centerY + innerHeight / 2];
         const pointB: [number, number] = [centerX + innerWidth / 2, centerY + innerHeight / 2];
@@ -2781,9 +2765,9 @@ export class SvgEditorComponent implements OnInit {
         // Regular polygon
         const radiusX = innerWidth / 2;
         const radiusY = innerHeight / 2;
-        const angleStep = (2 * Math.PI) / this.itemSelected.numberOfPoints;
+        const angleStep = (2 * Math.PI) / this.itemSelected.numberOfPoints!;
 
-        for (let i = 0; i < this.itemSelected.numberOfPoints; i++) {
+        for (let i = 0; i < this.itemSelected.numberOfPoints!; i++) {
           const angle = i * angleStep - Math.PI / 2; // Start from the top
           const x = centerX + radiusX * Math.cos(angle);
           const y = centerY + radiusY * Math.sin(angle);
@@ -2791,7 +2775,7 @@ export class SvgEditorComponent implements OnInit {
         }
       }
 
-      this.itemSelected.points = points;
+      (this.itemSelected as PolygonElement).points = points;
       const pointsAttr = points.map(point => point.join(',')).join(' ');
       if (pointsAttr) {
         this.currentSVGElement?.setAttribute('points', pointsAttr);
@@ -2799,12 +2783,91 @@ export class SvgEditorComponent implements OnInit {
     }
   }
 
-  generateRandom2() {
-    this.mainTwo = [chroma.random().hex()];
-    this.strokeColors = chroma.scale(this.mainTwo).colors(12);
-  }
+  updatePolygonPathWithCornerRadius = (radius: number) => {
+    if (this.currentSVGElement && this.currentSVGElement.tagName === 'polygon') {
+      // Get the current points of the polygon
+      const points = this.currentSVGElement.getAttribute('points');
 
-  colorName(color: any) {
-    return chroma(color).name();
-  }
+      if (!points) return;
+
+      const pointsArray = points.split(' ').map(point => {
+        const [x, y] = point.split(',').map(coord => parseFloat(coord));
+        return { x, y };
+      });
+
+      // Replace the polygon with a path
+      const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const pathData = this.createSmoothPathFromPoints(pointsArray, radius);
+      pathElement.setAttribute('d', pathData);
+
+      // Update the current SVG element (replace polygon with path)
+      this.currentSVGElement?.parentNode?.replaceChild(pathElement, this.currentSVGElement);
+      this.currentSVGElement = pathElement;
+    }
+  };
+
+  createSmoothPathFromPoints = (points: Array<{ x: number, y: number }>, radius: number) => {
+    let pathData = '';
+
+    const numPoints = points.length;
+
+    for (let i = 0; i < numPoints; i++) {
+      const prevPoint = points[(i - 1 + numPoints) % numPoints];
+      const currPoint = points[i];
+      const nextPoint = points[(i + 1) % numPoints];
+
+      // Calculate vectors for the current point and its adjacent points
+      const prevVector = {
+        x: currPoint.x - prevPoint.x,
+        y: currPoint.y - prevPoint.y,
+      };
+      const nextVector = {
+        x: nextPoint.x - currPoint.x,
+        y: nextPoint.y - currPoint.y,
+      };
+
+      // Normalize vectors to create offsets for rounding
+      const prevMagnitude = Math.sqrt(prevVector.x ** 2 + prevVector.y ** 2);
+      const nextMagnitude = Math.sqrt(nextVector.x ** 2 + nextVector.y ** 2);
+
+      const prevUnitVector = {
+        x: (prevVector.x / prevMagnitude) * radius,
+        y: (prevVector.y / prevMagnitude) * radius,
+      };
+
+      const nextUnitVector = {
+        x: (nextVector.x / nextMagnitude) * radius,
+        y: (nextVector.y / nextMagnitude) * radius,
+      };
+
+      // Start point for the arc
+      const startArc = {
+        x: currPoint.x - prevUnitVector.x,
+        y: currPoint.y - prevUnitVector.y,
+      };
+
+      // End point for the arc
+      const endArc = {
+        x: currPoint.x + nextUnitVector.x,
+        y: currPoint.y + nextUnitVector.y,
+      };
+
+      if (i === 0) {
+        // Move to the first point
+        pathData += `M ${startArc.x} ${startArc.y} `;
+      } else {
+        // Draw a line to the start of the arc
+        pathData += `L ${startArc.x} ${startArc.y} `;
+      }
+
+      // Draw an arc to the next point
+      const arcFlag = 0; // Use 0 for a smaller arc
+      pathData += `A ${radius} ${radius} 0 0 ${arcFlag} ${endArc.x} ${endArc.y} `;
+    }
+
+    // Close the path
+    pathData += 'Z';
+
+    return pathData;
+  };
 }

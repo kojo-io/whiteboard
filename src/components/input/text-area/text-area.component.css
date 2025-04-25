@@ -1,0 +1,9 @@
+textarea {
+  /* Hides scrollbars for WebKit browsers (Chrome, Safari) */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer */
+}
+
+textarea::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for WebKit browsers */
+}

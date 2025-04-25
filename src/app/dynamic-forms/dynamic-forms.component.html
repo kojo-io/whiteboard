@@ -1,0 +1,41 @@
+<div class="h-screen w-screen relative">
+  <div class="flex flex-col overflow-auto h-full w-full bg-white relative">
+    <div class="w-full flex justify-center p-[12px]">
+      <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-gray-100">
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+          <img src="forms/dropdown-bar.svg" alt="dropdown" class="">
+        </div>
+        <div (click)="addShortText()" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+          <img src="forms/input-pipe.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+          <img src="forms/poll-h.svg" alt="date" class="">
+        </div>
+        <div (click)="addNumber()" class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+          <img src="forms/input-numeric.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer">
+          <img src="forms/calendar-day.svg" alt="date" class="">
+        </div>
+      </div>
+    </div>
+    <div class="grow h-full w-full overflow-auto flex justify-center py-[12px]">
+      <div class="flex flex-col overflow-auto container shadow-xl border items-center p-24">
+        @for (item of form.questions; track item.id) {
+          <div class="w-full p-[12px]">
+            <label class="text-[#667085] block">{{item.question}}</label>
+            <small class="block text-[#667085] italic">{{item.description}}</small>
+            @switch (item.responseType) {
+              @case ('SHORT TEXT') {
+                <sc-input></sc-input>
+              }
+              @case ('NUMBER') {
+                <sc-number-input></sc-number-input>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

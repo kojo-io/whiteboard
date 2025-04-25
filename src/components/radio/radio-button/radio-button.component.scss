@@ -1,0 +1,7 @@
+.mark:after {
+  content: "";
+  display: none;
+}
+.container input:checked ~ .mark:after {
+  display: block;
+}

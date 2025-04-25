@@ -17,14 +17,28 @@ const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: () => import('./canvas-editor/canvas-editor.module').then(m => m.CanvasEditorModule)
+        loadChildren: () => import('./dynamic-forms/dynamic-forms.module').then(m => m.DynamicFormsModule)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./component-page/component-page.module').then(m => m.ComponentPageModule)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./editor/editor.module').then(m => m.EditorModule)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./mail-template/mail-template.module').then(m => m.MailTemplateModule)
       }
     ]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    useHash: true,
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

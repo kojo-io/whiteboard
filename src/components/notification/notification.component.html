@@ -1,0 +1,36 @@
+<ng-container *ngIf="service.alerts.length > 0">
+  <div class="fixed top-0 right-0 p-4 flex flex-col h-auto items-center space-y-4 z-[1000]">
+    <div class="grow space-y-4 alert-scroll">
+      <ng-container *ngFor="let alertItem of service.alerts; let i = index">
+        <div [class.animate__slideOutRight]="service.removedAlert === alertItem"
+             class="animate__animated animate__faster animate__slideInRight">
+          <div [ngClass]="{'border-blue-300 bg-blue-50': alertItem?.type === 'info',
+              'border-red-600 bg-red-50': alertItem?.type === 'danger',
+              'border-green-600 bg-green-50': alertItem?.type === 'success',
+              'border-amber-500 bg-amber-50': alertItem?.type === 'warning'}"
+               class="mb-4 shadow-sm border w-96 rounded-[12px] overflow-auto" role="alert">
+            <div class="flex space-x-[16px] justify-between p-[16px]">
+              <div class="flex space-x-[16px]">
+                <i class="leading-none text-2xl" [ngClass]="{
+        'ri-information-fill text-blue-500': alertItem?.type === 'info',
+        'ri-check-double-line text-green-500': alertItem?.type === 'success',
+        'ri-error-warning-fill text-amber-500': alertItem?.type === 'warning',
+        'ri-close-circle-fill text-red-500': alertItem?.type === 'danger',
+        }"></i>
+                <span class="sr-only">Info</span>
+                <div class="flex flex-col space-y-[16px]">
+                  <div class="text-[16px] font-[600] leading-[24px] text-slate-600" *ngIf="alertItem.title">{{alertItem?.title}}</div>
+                  <p class="text-[14px] text-slate-500 text-center">
+                    {{alertItem?.message}}
+                  </p>
+                </div>
+              </div>
+              <i class="ri-close-large-line text-[#98A2B3] font-bold leading-none cursor-pointer" (click)="service.clearAlertItem(alertItem)"></i>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+

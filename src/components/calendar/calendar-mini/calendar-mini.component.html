@@ -1,0 +1,120 @@
+<div class="relative max-w-max">
+  @switch (smallCalendarView) {
+    @case ('year') {
+      <div>
+        <div class="flex items-center justify-around w-full border-b">
+          <div (click)="GetPreviousYears()" class="w-full flex justify-start cursor-pointer p-2">
+            <i class="ri-arrow-left-s-line leading-none text-xl"></i>
+          </div>
+          <label (click)="smallCalendarView = 'year'" class=" whitespace-nowrap block text-[13px] hover:cursor-pointer hover:text-hover font-semibold">{{years[0]}} - {{years[years.length-1]}}</label>
+          <div (click)="GetNextYears()" class="w-full flex justify-end cursor-pointer p-2">
+            <i class="ri-arrow-right-s-line leading-none text-xl"></i>
+          </div>
+        </div>
+        <div class="w-[280px] h-[280px]">
+          <div class="grid grid-cols-3 w-full p-2">
+            <ng-container *ngFor="let year of years">
+              <div [class.text-hover]="selectedYear === year" class="w-full py-2 flex items-center justify-center hover:cursor-pointer hover:text-hover hover:font-semibold" (click)="selectYear(year); updateView('month')" [ngStyle]="{height: 240/4+'px'}">
+                <span class='text-[13px] font-[500] leading-none'>{{year}}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    }
+    @case ('all month') {
+      <div>
+        <div class="flex items-center justify-around w-full border-b">
+          <div (click)="smallCalendarView = 'month'" class="w-full flex justify-start cursor-pointer p-2">
+            <i class="ri-arrow-left-s-line leading-none text-xl "></i>
+          </div>
+          <label (click)="smallCalendarView = 'year'" class="whitespace-nowrap block text-[13px] hover:cursor-pointer hover:text-hover font-semibold">{{selectedYear}}</label>
+          <div class="w-full flex justify-center cursor-pointer p-2"></div>
+        </div>
+        <div class="w-[280px] h-[280px]" >
+          <div class="grid grid-cols-3 w-full p-2 ">
+            <ng-container *ngFor="let month of AllMonths; let i = index">
+              <div [class.text-blue-600]="i === monthCount" [class.font-semibold]="i === monthCount" class="w-full py-2 flex items-center justify-center hover:cursor-pointer hover:text-hover hover:font-semibold" (click)="selectMonth(month)" [ngStyle]="{height: 240/4+'px'}">
+                <span class="text-[13px] font-[500] leading-none">{{month.slice(0,3)}}</span >
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    }
+    @default {
+      <div>
+        <div class="flex items-center justify-around w-full">
+          @if(mode === 'range') {
+            @if(previousButtonTemplate) {
+              <ng-container *ngTemplateOutlet="$any(previousButtonTemplate); context: context"></ng-container>
+            } @else {
+              <div class="w-full flex justify-center cursor-pointer p-2"></div>
+            }
+          } @else {
+          <div (click)="GetPreviousMonth()" class="w-full flex justify-start cursor-pointer p-2">
+            <i class="ri-arrow-left-s-line leading-none text-xl "></i>
+          </div>
+          }
+          <div class="flex items-center w-full justify-center font-semibold">
+            <div (click)="smallCalendarView = 'all month'" class="flex justify-center group p-2 rounded-md">
+              <label class="block text-[13px] group-hover:cursor-pointer">{{AllMonths[currentDate.getMonth()]}}</label>
+            </div>
+            <div (click)="smallCalendarView = 'year'" class="flex cursor-pointer group justify-center p-2">
+              <label  class=" block text-[13px] group-hover:cursor-pointer">{{selectedYear}}</label>
+            </div>
+          </div>
+         @if (mode === 'range') {
+           @if(nextButtonTemplate) {
+             <ng-container *ngTemplateOutlet="$any(nextButtonTemplate); context: context"></ng-container>
+           } @else {
+             <div class="w-full flex justify-center cursor-pointer p-2"></div>
+           }
+         } @else {
+           <div (click)="GetNextMonth()" class="w-full flex justify-end cursor-pointer p-2">
+             <i class="ri-arrow-right-s-line leading-none text-xl"></i>
+           </div>
+         }
+        </div>
+        <div class="h-auto flex items-center">
+          <ng-container *ngFor="let days of AllDays">
+            <div class="w-10 h-10 flex items-center justify-center">
+              <span class="leading-none block text-gray-400 font-[500] text-[12px]">{{days.slice(0,2)}}</span>
+            </div>
+          </ng-container>
+        </div>
+        <div class="h-[240px]">
+          <ng-container *ngFor="let dates of weeks; let i = index">
+            <div class="flex">
+              <ng-container *ngFor="let date of dates.dates">
+                <div class="w-10 h-10 flex items-center justify-center">
+                  @if (date !== null) {
+                    <div
+                      (click)="selectDate(date)"
+                      class="w-7 h-7 flex items-center justify-center rounded-full"
+                      [ngClass]="{
+                      'bg-gray-200 text-black': findDateInDates(date) && !isLastSelectedDate(date) && !isFirstSelectedDate(date),
+                      'bg-secondary': getToday(date) && !isSelectedDate(date) && mode === 'single',
+                      'bg-primary text-white': isSelectedDate(date) && selection && mode === 'range' ||
+                      isSelectedDate(date) && mode === 'single' ||
+                       isLastSelectedDate(date) && mode === 'range' ||
+                       isFirstSelectedDate(date) && mode === 'range',
+                       'text-gray-400': !getToday(date) && disablePastDates || date.getMonth() !== currentDate.getMonth(),
+                       'hover:cursor-not-allowed': compareDate(date) && disablePastDates,
+                       'hover:cursor-pointer': !compareDate(date) || (compareDate(date) && !disablePastDates)}">
+                      <span class="text-[13px] font-[500] leading-none">{{ date | date: 'dd' }}</span>
+                    </div>
+                  }
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+<!--        <div *ngIf="mode === 'single'" class="flex justify-between p-2 items-end">-->
+<!--          <span class="block text-[13px] font-bold">Today: {{today | date : 'MM/dd/yyyy'}}</span>-->
+<!--          <sc-button (click)="setToday()">Today</sc-button>-->
+<!--        </div>-->
+      </div>
+    }
+  }
+</div>

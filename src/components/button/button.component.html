@@ -1,0 +1,30 @@
+<button [disabled]="loading || disabled"
+        class="rounded-[8px] box-border border-solid px-[10px] py-[6px] text-[14px] font-[500] leading-[20px] items-center space-x-[8px] inline-flex justify-center h-[36px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+     [ngClass]=
+       "{'border-primary bg-primary hover:bg-hover border-[1px]': variant === 'primary',
+       'border-[#E5E7EB] bg-white text-[#667085] hover:bg-gray-50 border-[1px]': variant === 'secondary',
+       'border-[#E5E7EB] bg-[#E5E7EB] text-[#545D69]': variant === 'light',
+       'border-[1px] shadow-sm': variant !== 'ghost',
+       'bg-white text-[#545D69]': variant === 'ghost',
+       'w-full': block === '',
+       'text-white': variant === 'destructive' || variant === 'primary',
+       'border-red-500 bg-red-500 hover:bg-red-600': variant === 'destructive',
+       }"
+>
+  @if(loading) {
+    <div class="animate-spin">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="33" width="33" class="py-[6px] -mx-[8px]" fill="currentColor"><path d="M18.364 5.63604L16.9497 7.05025C15.683 5.7835 13.933 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12H21C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.4853 3 16.7353 4.00736 18.364 5.63604Z"></path></svg>
+    </div>
+  } @else {
+    @if(prefixIcon) {
+      <ng-container *ngTemplateOutlet="$any(prefixIcon); context: context"></ng-container>
+    }
+  }
+  <span>
+    <ng-content></ng-content>
+  </span>
+  @if(suffixIcon) {
+    <ng-container *ngTemplateOutlet="$any(suffixIcon); context: context"></ng-container>
+  }
+</button>
+

@@ -1,0 +1,53 @@
+<div #selectBox
+     class="py-[8px] rounded-[8px] flex items-center bg-white border-[1px] h-[36px] relative"
+     DropDown
+     [disabled]="disabled"
+     [menu]="menuElement"
+     position="bottom-start"
+     [ngClass]="{
+       'bg-[#F9FAFB] cursor-not-allowed': disabled || readOnly,
+       'border-[#E5E7EB] cursor-pointer': !invalid && !focused,
+       'ring-2 ring-secondary border-primary': focused && !invalid,
+       'ring-2 ring-red-200 border-red-500': touched && invalid,
+       'space-x-[8px]': prefixTemplate || suffixTemplate
+     }">
+  @if(prefixTemplate) {
+    <div class="z-[1]" (click)="$event.stopImmediatePropagation()">
+      <ng-container *ngTemplateOutlet="$any(prefixTemplate); context: context"></ng-container>
+    </div>
+  }
+  <input (blur)="onBlur()" (focus)="onFocus()" [readOnly]="true" class="bg-transparent absolute h-full inset-0 outline-0 border-transparent cursor-pointer" />
+  <div class="flex-grow mr-[4px] px-[8px] h-full overflow-hidden z-[0]">
+    @if (selectedItems.length > 0) {
+      <div class="flex items-stretch overflow-x-auto gap-[4px] h-full" style="scrollbar-width: none;">
+        <div *ngFor="let selected of selectedItems; let i = index" class="flex items-center gap-[4px] max-h-max text-[12px] bg-gray-300 rounded px-[2px]">
+          <span class="truncate max-w-max">{{ selected.label }}</span>
+          <i class="ri-close-line leading-none cursor-pointer" (click)="$event.stopImmediatePropagation(); removeItem(i)"></i>
+        </div>
+      </div>
+    } @else {
+      <span class="text-gray-400 text-sm truncate block">{{ placeholder }}</span>
+    }
+  </div>
+  <div class="max-w-max flex items-center">
+    <ng-container *ngIf="selectedItems.length > 0 && allowClear">
+      <i class="ri-close-circle-fill leading-none z-[1]" (click)="$event.stopImmediatePropagation(); clearSelected()"></i>
+    </ng-container>
+    <i class="ri-arrow-down-s-line leading-none dropdown-menu-icon cursor-pointer mr-[8px]" [ngClass]="{'rotate-180': focused}"></i>
+    @if(suffixTemplate) {
+      <div class="z-[1]" (click)="$event.stopImmediatePropagation()">
+        <ng-container *ngTemplateOutlet="$any(suffixTemplate); context: context"></ng-container>
+      </div>
+    }
+  </div>
+</div>
+
+<div #menuElement DropDownItem class="py-[4px]">
+  <div [ngStyle]="{minWidth: selectBox.clientWidth+'px'}"
+       class="border border-gray-200 rounded-[8px] max-h-[300px] flex flex-col bg-white shadow overflow-auto cursor-pointer">
+    <ng-content select="sc-select-search"></ng-content>
+    <div class="w-full divide-y grow h-full overflow-auto scrollbar-hidden py-[4px]">
+      <ng-content select="sc-multi-select-option"></ng-content>
+    </div>
+  </div>
+</div>

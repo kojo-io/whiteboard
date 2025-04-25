@@ -1,0 +1,41 @@
+<div class="w-full">
+  <div class="rounded-[8px] flex border-[1px] h-[36px]"
+       [ngClass]="{
+     'bg-[#F9FAFB]': disabled,
+     'bg-white': !disabled,
+     'cursor-not-allowed':disabled || readOnly,
+     'border-[#E5E7EB]': !invalid && !focused,
+     'ring-2 ring-secondary border-primary' : focused && !invalid,
+     'ring-2 ring-red-200 border-red-500': touched && invalid
+     }">
+    @if(prefixTemplate) {
+      <div class="flex items-center pl-[8px]">
+        <ng-container *ngTemplateOutlet="$any(prefixTemplate); context: context"></ng-container>
+      </div>
+    }
+    <input [(ngModel)]="model"
+           (ngModelChange)="checkValue($event)"
+           class="border-none w-full outline-0 text-[14px] h-[20px] text-[#667085] placeholder:text-[14px] placeholder:text-[#667085] my-[8px] mx-[8px]"
+           [ngClass]="{
+         'bg-[#F9FAFB]': disabled,
+         'cursor-not-allowed':disabled || readOnly,
+         }"
+           [name]="name"
+           [type]="type"
+           (blur)="onBlur()"
+           (focus)="onFocus()"
+           [disabled]="disabled"
+           [readOnly]="readOnly"
+           [id]="id"
+           [placeholder]="placeholder">
+    <div class="flex items-center relative">
+      <div class="relative h-full flex items-center pr-[8px]" *ngIf="!readOnly">
+        <div class="flex flex-col">
+          <i class="ri-arrow-up-s-fill leading-none cursor-pointer" (click)="increment()"></i>
+          <i class="ri-arrow-down-s-fill leading-none cursor-pointer" (click)="decrement()"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <small class="text-red-500">{{errorMessage}}</small>
+</div>

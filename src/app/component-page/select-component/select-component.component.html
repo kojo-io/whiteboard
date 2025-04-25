@@ -1,0 +1,78 @@
+<div class="flex flex-col h-full w-full overflow-auto">
+  <h1 class="text-4xl w-full text-center">Input</h1>
+  <div class="h-full flex w-full justify-center grow">
+    <div class="container grid grid-cols-1 gap-4 h-full w-full">
+      <div class="flex flex-col justify-center space-y-14 items-center">
+        <div class="w-full space-y-4">
+          <div class="w-72">
+            <sc-check-box [disabled]="true" [indeterminate]="true" [checked]="true"/>
+            <sc-switch/>
+            <sc-radio-group>
+              <sc-radio-button value="name">
+                <sc-label class="ml-2">Name</sc-label>
+              </sc-radio-button>
+              <sc-radio-button value="sure"/>
+            </sc-radio-group>
+            <sc-label>Template Mode (custom select)</sc-label>
+            <sc-select [(ngModel)]="selected" [displayTemplate]="sampleSelect" [template]="true" placeholder="Select"
+                       (ngModelChange)="getSelected($event)">
+              <ng-template #sampleSelect>
+                <div class="flex items-center space-x-[8px] w-full">
+                  <i [ngClass]="displaySelected?.icon" class="leading-none ri-1x text-[#374151]"></i>
+                  <span class="text-[14px] text-[#374151]">{{displaySelected?.title}}</span>
+                </div>
+              </ng-template>
+              <sc-select-search (onChange)="filter($event)"></sc-select-search>
+              <sc-select-option *ngFor="let item of list" [value]="item.id" [selected]="item.id === selected">
+                <div class="px-[8px] py-[6px] cursor-pointer flex items-center space-x-[8px] w-full">
+                  <i [ngClass]="item.icon" class="leading-[20px] text-[#374151]"></i>
+                  <span class="text-[14px] leading-[20px] text-[#374151]">{{item.title}}</span>
+                </div>
+              </sc-select-option>
+            </sc-select>
+          </div>
+          <div class="w-64">
+            <sc-label>General Select List (No array data)</sc-label>
+            <sc-select [(ngModel)]="selected2" placeholder="Select list" (ngModelChange)="getDispSelected($event)" [allowClear]="true" [suffixTemplate]="suffix">
+              <sc-select-option [value]="1" [selected]="selected2 === 1">
+                User
+              </sc-select-option>
+              <sc-select-option [value]="2" [selected]="selected2 === 2">
+                Admin
+              </sc-select-option>
+              <sc-select-option [value]="3" [selected]="selected2 === 3">
+                Standard
+              </sc-select-option>
+              <sc-select-option [value]="4" [selected]="selected2 === 4">
+                Standard Standard Standard Standard Standard Standard Standard Standard
+              </sc-select-option>
+            </sc-select>
+
+            <ng-template #suffix>
+              <i class="ri-add-line leading-none cursor-pointer"></i>
+            </ng-template>
+          </div>
+          <div class="w-64">
+            <sc-multi-select ngModel (ngModelChange)="getDispSelected($event)" [data]="newList">
+              <sc-multi-select-option [value]="1" label="User">
+                User
+              </sc-multi-select-option>
+              <sc-multi-select-option [value]="2" label="Admin">
+                Admin
+              </sc-multi-select-option>
+              <sc-multi-select-option [value]="3" label="Standard">
+                Standard
+              </sc-multi-select-option>
+            </sc-multi-select>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="h-full w-full flex justify-center">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,38 @@
+<div class="h-screen w-screen relative">
+  <div class="flex flex-col overflow-auto h-full w-full bg-white relative">
+    <div class="w-full flex justify-center p-[12px] relative">
+      <div class="h-[48px] bg-white rounded-[0.5rem] shadow p-[4px] flex items-center space-x-[4px] border border-gray-100">
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Select List" position="bottom" routerLink="/components/select-component">
+          <img src="forms/dropdown-bar.svg" alt="dropdown" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Input" position="bottom" routerLink="/components/input-component">
+          <img src="forms/input-pipe.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Text Area" position="bottom">
+          <img src="forms/poll-h.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Numeric Input" position="bottom" routerLink="/components/numeric-component">
+          <img src="forms/input-numeric.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Date Picker" position="bottom" routerLink="/components/date-component">
+          <img src="forms/calendar-day.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Tabs" position="bottom" routerLink="/components/tab-component">
+          <img src="tab-folder.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Button" position="bottom" routerLink="/components/button-component">
+          <img src="forms/tip-button.svg" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Pagination" position="bottom" routerLink="/components/paginate-component">
+          <img src="paginate.png" alt="date" class="">
+        </div>
+        <div class="h-[40px] w-[40px] hover:bg-purple-200 rounded-[0.5rem] p-[10px] cursor-pointer" Tooltip tip="Table" position="bottom" routerLink="/components/table-component">
+          <img src="table.png" alt="date" class="">
+        </div>
+      </div>
+    </div>
+    <div class="grow h-full w-full overflow-auto p-[12px]">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

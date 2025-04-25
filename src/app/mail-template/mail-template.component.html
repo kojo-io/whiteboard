@@ -1,0 +1,66 @@
+<div class="preview-container">
+  <div class="input-section">
+    <h2>HTML Input</h2>
+    <div class="w-full h-full">
+      <app-mail-editor (valueChange)="handlePaste($event)"/>
+    </div>
+  </div>
+
+  <div class="middle-section">
+    <div class="placeholders-section" *ngIf="showPlaceholdersSection">
+      <h3>Template Variables</h3>
+      <div class="placeholder-inputs">
+        <div class="placeholder-input" *ngFor="let placeholder of placeholders">
+          <label [for]="placeholder.name">
+            {{placeholder.name}}
+            <span *ngIf="placeholder.description" class="placeholder-description">
+              {{placeholder.description}}
+            </span>
+          </label>
+
+          <!-- Text Input -->
+          <input
+            *ngIf="placeholder.type === 'text'"
+            type="text"
+            [id]="placeholder.name"
+            [(ngModel)]="placeholder.currentValue"
+            (ngModelChange)="updatePreview()"
+            [placeholder]="'Enter ' + placeholder.name"
+          >
+
+          <!-- Color Picker -->
+          <div *ngIf="placeholder.type === 'color'" class="color-input-group">
+            <input
+              type="color"
+              [id]="placeholder.name"
+              [(ngModel)]="placeholder.currentValue"
+              (ngModelChange)="updatePreview()"
+            >
+            <input
+              type="text"
+              [(ngModel)]="placeholder.currentValue"
+              (ngModelChange)="updatePreview()"
+              [placeholder]="placeholder.defaultValue"
+            >
+          </div>
+
+          <!-- Date Picker -->
+          <input
+            *ngIf="placeholder.type === 'date'"
+            type="date"
+            [id]="placeholder.name"
+            [(ngModel)]="placeholder.currentValue"
+            (ngModelChange)="updatePreview()"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-section">
+    <h2>Live Preview</h2>
+    <div class="preview-frame">
+      <div [innerHTML]="previewHtml" class="preview-content"></div>
+    </div>
+  </div>
+</div>

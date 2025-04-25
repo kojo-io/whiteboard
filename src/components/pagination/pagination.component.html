@@ -1,0 +1,34 @@
+<div class="space-x-4 flex items-center">
+  @if(showCurrentPageInfo) {
+    @if(currentPageInfoTemplate) {
+      <sc-label>
+        <span [innerText]="pageReport"></span>
+      </sc-label>
+    } @else {
+      <sc-label>{{first}} - {{last}} of {{totalRecords}}</sc-label>
+    }
+  }
+  <div (click)="previousPage()" class="flex items-center justify-center w-[30px] h-[30px] hover:bg-blue-100 rounded-full cursor-pointer">
+    <i class="ri-arrow-left-s-line leading-none text-xl"></i>
+  </div>
+  @if (showPageLinks) {
+    @for(item of displayPageIndex; track i; let i = $index) {
+      <div (click)="selectPage(item)"
+           [ngClass]="{'bg-blue-100': item === currentPage}"
+           class="flex items-center justify-center w-[30px] h-[30px] hover:bg-blue-100 rounded-full cursor-pointer">
+        <span class="text-[12px]" [ngClass]="{'text-blue-500 font-bold': item === currentPage}">{{item}}</span>
+      </div>
+    }
+  }
+  <div (click)="nextPage()" class="flex items-center justify-center w-[30px] h-[30px] hover:bg-blue-100 rounded-full cursor-pointer">
+    <i class="ri-arrow-right-s-line leading-none text-xl"></i>
+  </div>
+  @if(showPageOptions) {
+    <sc-select [(ngModel)]="currentPageSize" (ngModelChange)="sizeChange($event)">
+      <sc-select-option
+        *ngFor="let item of pageSizeOptions"
+        [value]="item" label="{{item}}"
+        [selected]="currentPageSize === item"/>
+    </sc-select>
+  }
+</div>

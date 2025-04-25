@@ -1,0 +1,36 @@
+<div class="flex flex-col items-center justify-center">
+  <div class="w-full flex justify-between">
+    <ng-template #previous>
+      <div (click)="previousDate()" class="w-full flex justify-start cursor-pointer p-2">
+        <i class="ri-arrow-left-s-line leading-none text-xl"></i>
+      </div>
+    </ng-template>
+    <ng-template #next>
+      <div (click)="nextDate()" class="w-full flex justify-end cursor-pointer p-2">
+        <i class="ri-arrow-right-s-line leading-none text-xl"></i>
+      </div>
+    </ng-template>
+  </div>
+  <div class="max-w-max flex" [ngClass]="{'divide-x': showDivider}">
+    <div class="pr-2">
+      <sc-calendar-mini
+        mode="range"
+        [previousButtonTemplate]="previous"
+        [(ngModel)]="start"
+        [selectedDates]="dateArray"
+        [selection]="selectionStart"
+        (onSelectionChange)="selectionStart = $event"
+        (onMonthYearChange)="updateStartCalendar($event)"
+        (ngModelChange)="getStartDate($event)"/>
+    </div>
+   <div class="pl-2">
+     <sc-calendar-mini
+       [(ngModel)]="end"
+       [selectedDates]="dateArray"
+       [selection]="selectionEnd"
+       (onSelectionChange)="selectionEnd = $event"
+       (onMonthYearChange)="updateEndCalendar($event)"
+       mode="range" [nextButtonTemplate]="next" (ngModelChange)="getEndDate($event)"/>
+   </div>
+  </div>
+</div>
