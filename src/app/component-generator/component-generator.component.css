@@ -1,0 +1,109 @@
+.resizer {
+  width: 4px;
+  cursor: col-resize;
+  background-color: #f1f5f9;
+  transition: background-color 0.2s;
+}
+.resizer:hover {
+  background-color: #e2e8f0;
+}
+.code-block {
+  font-family: 'Fira Code', monospace;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+.custom-checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  background-color: white;
+  transition: all 0.2s;
+}
+.custom-checkbox.checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+.custom-checkbox.checked:after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.custom-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background-color: #cbd5e1;
+  border-radius: 999px;
+  transition: all 0.3s;
+}
+.custom-switch.checked {
+  background-color: #3b82f6;
+}
+.custom-switch .toggle {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+.custom-switch.checked .toggle {
+  transform: translateX(16px);
+}
+.class-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin: 2px;
+  font-size: 12px;
+}
+.class-tag .remove {
+  margin-left: 4px;
+  cursor: pointer;
+  color: #94a3b8;
+}
+.class-tag .remove:hover {
+  color: #64748b;
+}
+.class-button {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+.class-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.class-button.active {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}

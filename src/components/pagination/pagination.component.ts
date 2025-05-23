@@ -4,8 +4,11 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input, OnChanges, OnInit,
-  Output, SimpleChanges
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
 } from '@angular/core';
 
 @Component({
@@ -19,124 +22,124 @@ export class PaginationComponent implements OnInit, OnChanges {
   @Input() showPageOptions: boolean = true;
   @Input() showCurrentPageInfo: boolean = false;
   @Input() currentPageInfoTemplate?: string;
-  @Input() currentPageSize = 10
+
+  @Input() currentPageSize = 10;
   @Input() currentPage = 1;
   @Input() totalPages = 0;
   @Input() totalRecords = 0;
+
   @Input() first = 0;
   @Input() last = 0;
   @Input() pageSizeOptions: number[] = [10, 20, 30, 40, 50];
-  @Output() onPageNumberChange = new EventEmitter();
-  @Output() onPageSizeChange = new EventEmitter();
 
-  private _pageIndex: any[] = [];
-  displayPageIndex: any[] = [];
+  @Output() onPageNumberChange = new EventEmitter<number>();
+  @Output() onPageSizeChange = new EventEmitter<number>();
+
+  private _pageIndex: number[] = [];
+  displayPageIndex: number[] = [];
   pageReport = '';
 
-  private cd= inject(ChangeDetectorRef);
+  private cd = inject(ChangeDetectorRef);
+
+  ngOnInit(): void {
+    this.initializePagination(true);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['totalRecords'] ||
+      changes['currentPage'] ||
+      changes['currentPageSize']
+    ) {
+      this.initializePagination();
+    }
+  }
+
+  initializePagination(emitInitial = false): void {
+    this.calcPagination();
+    if (emitInitial) {
+      this.onPageNumberChange.emit(this.currentPage);
+      this.onPageSizeChange.emit(this.currentPageSize);
+    }
+    this.cd.detectChanges();
+  }
 
   nextPage = () => {
     if (this.totalPages > this.currentPage) {
       this.currentPage += 1;
-      this.calcPagination();
-      this.cd.detectChanges();
-      this.onPageNumberChange.emit(this.currentPage)
+      this.emitPageChange();
     }
-  }
+  };
 
   previousPage = () => {
     if (this.currentPage > 1) {
       this.currentPage -= 1;
-      this.calcPagination();
-      this.cd.detectChanges();
-      this.onPageNumberChange.emit(this.currentPage)
+      this.emitPageChange();
     }
-  }
+  };
 
   sizeChange = (event: number) => {
     this.currentPageSize = event;
+    this.currentPage = 1;
+    this.emitPageChange();
+  };
+
+  selectPage = (page: number) => {
+    this.currentPage = page;
+    this.emitPageChange();
+  };
+
+  emitPageChange(): void {
     this.calcPagination();
-    this.cd.detectChanges();
+    this.onPageNumberChange.emit(this.currentPage);
     this.onPageSizeChange.emit(this.currentPageSize);
-  }
-
-  selectPage = (event: number) => {
-    this.currentPage = event;
-    this.calcPagination();
     this.cd.detectChanges();
-    this.onPageNumberChange.emit(this.currentPage)
   }
 
-  private calcPagination = () => {
+  private calcPagination(): void {
     this.totalPages = Math.ceil(this.totalRecords / this.currentPageSize);
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = 1;
-    }
+
     if (this.totalRecords > 0) {
-      if (this.currentPage === 1) {
-        this.first = 1;
-        this.last = this.currentPageSize > this.totalRecords ? this.totalRecords : this.currentPageSize;
-      } else {
-        this.first = (this.currentPage * this.currentPageSize) - this.currentPageSize + 1;
-        const endCount  = (this.first + this.currentPageSize) - 1;
-        this.last = endCount > this.totalRecords ? this.totalRecords : endCount;
-      }
+      this.first = (this.currentPage - 1) * this.currentPageSize + 1;
+      this.last = Math.min(this.totalRecords, this.currentPage * this.currentPageSize);
     } else {
       this.first = 0;
       this.last = 0;
     }
 
-    this._pageIndex = [];
-    for (let i = 0; i < this.totalPages; i++) {
-      this._pageIndex.push(i+1);
-    }
+    // Page index generation
+    this._pageIndex = Array.from({ length: this.totalPages }, (_, i) => i + 1);
 
+    // Dynamic slicing for compact page index display
     if (this.totalPages > 5) {
-      if (this.currentPage < 5) {
-        this.displayPageIndex = this._pageIndex.slice(0,5);
+      if (this.currentPage <= 3) {
+        this.displayPageIndex = this._pageIndex.slice(0, 5);
+      } else if (this.currentPage + 2 >= this.totalPages) {
+        this.displayPageIndex = this._pageIndex.slice(-5);
       } else {
-        const finalPageNumber = this.currentPage+2;
-        if (finalPageNumber > this.totalPages) {
-          this.displayPageIndex = this._pageIndex.slice(this._pageIndex.length - 5, this.totalPages);
-        } else {
-          this.displayPageIndex = this._pageIndex.slice(finalPageNumber - 5, finalPageNumber);
-        }
+        const start = this.currentPage - 3;
+        this.displayPageIndex = this._pageIndex.slice(start, start + 5);
       }
     } else {
       this.displayPageIndex = this._pageIndex;
     }
 
+    // Current page info report
     if (this.currentPageInfoTemplate) {
-      this.pageReport = this.currentPageInfoTemplate;
-      this.pageReport = this.pageReport?.replace(/{first}|{last}|{totalRecords}|{currentPage}|{currentPageSize}|{totalPages}/g, (match) => {
-        switch (match) {
-          case '{first}':
-            return `${this.first}`;
-          case '{last}':
-            return `${this.last}`;
-          case '{totalRecords}':
-            return `${this.totalRecords}`;
-          case '{totalPages}':
-            return `${this.totalPages}`;
-          case '{currentPage}':
-            return `${this.currentPage}`;
-          case '{currentPageSize}':
-            return `${this.currentPageSize}`;
-          default:
-            return match;
+      this.pageReport = this.currentPageInfoTemplate.replace(
+        /{first}|{last}|{totalRecords}|{currentPage}|{currentPageSize}|{totalPages}/g,
+        (match) => {
+          switch (match) {
+            case '{first}': return `${this.first}`;
+            case '{last}': return `${this.last}`;
+            case '{totalRecords}': return `${this.totalRecords}`;
+            case '{totalPages}': return `${this.totalPages}`;
+            case '{currentPage}': return `${this.currentPage}`;
+            case '{currentPageSize}': return `${this.currentPageSize}`;
+            default: return match;
+          }
         }
-      });
+      );
     }
-  }
-
-  ngOnInit(): void {
-    this.currentPage = 1;
-    this.calcPagination();
-    this.cd.detectChanges();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.calcPagination();
-    this.cd.detectChanges();
   }
 }

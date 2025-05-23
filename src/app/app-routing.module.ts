@@ -30,6 +30,14 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./mail-template/mail-template.module').then(m => m.MailTemplateModule)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./fabricjs-page/fabricjs-page.module').then(m => m.FabricjsPageModule)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./component-generator/component-generator.module').then(m => m.ComponentGeneratorModule)
       }
     ]
   }

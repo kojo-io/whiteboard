@@ -1,0 +1,386 @@
+<div class="bg-gray-100 h-screen flex flex-col">
+  <!-- Top Navigation -->
+  <header class="bg-gray-200 py-2 px-4 flex items-center justify-between">
+    <div class="flex items-center">
+      <div class="font-['Pacifico'] text-xl mr-6">logo</div>
+      <div class="flex space-x-4">
+        <button class="text-sm hover:text-primary rounded">File</button>
+        <button class="text-sm hover:text-primary rounded">Edit</button>
+        <button class="text-sm hover:text-primary rounded">View</button>
+        <button class="text-sm hover:text-primary rounded">Insert</button>
+        <button class="text-sm hover:text-primary rounded">Format</button>
+        <button class="text-sm hover:text-primary rounded">Tools</button>
+        <button class="text-sm hover:text-primary rounded">Help</button>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <button class="bg-gray-700 hover:bg-gray-600 text-white text-sm py-1 px-2 rounded whitespace-nowrap">
+          <i class="ri-user-add-line mr-1"></i> Invite
+        </button>
+        <div class="flex -space-x-2">
+          <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">JD</div>
+          <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-xs">MK</div>
+          <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">AL</div>
+        </div>
+      </div>
+      <button class="bg-primary hover:bg-blue-600 text-white text-sm py-1 px-3 rounded whitespace-nowrap">
+        <i class="ri-share-line mr-1"></i> Share
+      </button>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Left Sidebar - Tools -->
+    <div class="bg-gray-800 text-white w-16 flex flex-col">
+      <div class="flex flex-col items-center py-2 border-b border-gray-700">
+        <button class="toolbar-item w-12 h-12 flex items-center justify-center rounded mb-2">
+          <i class="ri-file-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-12 h-12 flex items-center justify-center rounded mb-2">
+          <i class="ri-folder-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-12 h-12 flex items-center justify-center rounded">
+          <i class="ri-save-line ri-lg"></i>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto py-2">
+        <button class="toolbar-item active-tool w-full h-12 flex items-center justify-center">
+          <i class="ri-cursor-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-pencil-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-brush-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-eraser-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center" (click)="addText()">
+          <i class="ri-text ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center" (click)="addRectangle()">
+          <i class="ri-shape-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-line-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-image-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-sticky-note-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-chat-1-line ri-lg"></i>
+        </button>
+      </div>
+      <div class="py-2 border-t border-gray-700">
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-settings-line ri-lg"></i>
+        </button>
+        <button class="toolbar-item w-full h-12 flex items-center justify-center">
+          <i class="ri-question-line ri-lg"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Main Canvas Area -->
+    <div class="flex flex-grow relative z-0 overflow-auto">
+      <div class="w-full h-full overflow-auto canvas-area border">
+        <div class="relative w-full py-[200px] overflow-auto flex justify-center items-center canvas-wrapper" #canvasContainer>
+          <canvas id="canvas" class="shadow-md"></canvas>
+        </div>
+      </div>
+      <!-- Zoom Controls -->
+      <div class="absolute z-10 bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-3 py-1 rounded-full flex items-center space-x-3">
+        <button class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-full" (click)="zoomOut()">
+          <i class="ri-subtract-line"></i>
+        </button>
+        <div class="text-sm font-medium">{{ zoomPercentage }}%</div>
+        <button class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-full" (click)="zoomIn()">
+          <i class="ri-add-line"></i>
+        </button>
+        <div class="h-6 border-l border-gray-600 mx-1"></div>
+        <button class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-full">
+          <i class="ri-fullscreen-line"></i>
+        </button>
+      </div>
+      <!-- Bottom Toolbar -->
+      <div class="absolute z-10 bottom-16 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded-lg flex items-center space-x-1">
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-cursor-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-pencil-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-brush-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-eraser-line"></i>
+        </button>
+        <div class="h-8 border-l border-gray-600 mx-1"></div>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-shape-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-text-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-image-line"></i>
+        </button>
+        <div class="h-8 border-l border-gray-600 mx-1"></div>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-hand-line"></i>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center hover:bg-gray-700 rounded">
+          <i class="ri-code-line"></i>
+        </button>
+      </div>
+      <!-- Coordinates Display -->
+      <div class="absolute z-10 bottom-4 right-4 bg-gray-800 text-white text-xs px-2 py-1 rounded">
+        X: 1250 Y: 650
+      </div>
+    </div>
+    <!-- Right Sidebar - Properties -->
+    <div class="bg-gray-800 text-white w-80 min-w-80 flex flex-col border-l border-gray-700 overflow-y-auto">
+      <div class="p-4 border-b border-gray-700">
+        <h3 class="font-medium mb-4">Text Properties</h3>
+        <!-- Font Properties -->
+<!--        <div class="mb-4">-->
+<!--          <label class="text-sm text-gray-300 block mb-2">Font Family</label>-->
+<!--          <div class="relative">-->
+<!--            <select class="w-full bg-gray-700 text-sm px-3 py-2 rounded appearance-none pr-8">-->
+<!--              <option>Arial</option>-->
+<!--              <option>Helvetica</option>-->
+<!--              <option>Times New Roman</option>-->
+<!--              <option>Georgia</option>-->
+<!--              <option>Courier New</option>-->
+<!--              <option>Verdana</option>-->
+<!--            </select>-->
+<!--            <i class="ri-arrow-down-s-line absolute right-2 top-1/2 -translate-y-1/2"></i>-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-sm text-gray-300 block mb-2">Font Size</label>
+            <div class="flex items-center">
+              <input type="number" value="16" class="w-full bg-gray-700 text-sm px-3 py-2 rounded-l border-none" min="1">
+              <span class="bg-gray-600 text-sm px-2 py-2 rounded-r">px</span>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm text-gray-300 block mb-2">Line Height</label>
+            <div class="flex items-center">
+              <input type="number" value="1.5" class="w-full bg-gray-700 text-sm px-3 py-2 rounded-l border-none" step="0.1" min="0">
+              <span class="bg-gray-600 text-sm px-2 py-2 rounded-r">em</span>
+            </div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Font Style</label>
+          <div class="flex space-x-2">
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-bold"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-italic"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-underline"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-strikethrough"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Text Alignment</label>
+          <div class="flex space-x-2">
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-align-left"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-align-center"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-align-right"></i>
+            </button>
+            <button class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center hover:bg-gray-600">
+              <i class="ri-align-justify"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Color -->
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Text Color</label>
+          <div class="flex flex-wrap gap-2">
+            <div class="color-option active" style="background-color: #000000;"></div>
+            <div class="color-option" style="background-color: #ffffff;"></div>
+            <div class="color-option" style="background-color: #ff0000;"></div>
+            <div class="color-option" style="background-color: #00ff00;"></div>
+            <div class="color-option" style="background-color: #0000ff;"></div>
+            <div class="color-option" style="background-color: #ffff00;"></div>
+          </div>
+          <div class="mt-2 flex items-center">
+            <div class="w-6 h-6 bg-black rounded mr-2"></div>
+            <input type="text" value="#000000" class="bg-gray-700 text-sm px-2 py-1 rounded w-full border-none">
+          </div>
+        </div>
+      </div>
+      <!-- Box Model Properties -->
+      <div class="p-4 border-b border-gray-700">
+        <h3 class="font-medium mb-4">Box Model</h3>
+        <!-- Margin -->
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Margin</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Top</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Right</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Bottom</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Left</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+          </div>
+        </div>
+        <!-- Padding -->
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Padding</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Top</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Right</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Bottom</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">Left</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+          </div>
+        </div>
+        <!-- Border -->
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Border</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Width</label>
+              <input type="number" value="1" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Style</label>
+              <select class="w-full bg-gray-700 text-sm px-3 py-1 rounded appearance-none pr-8 border-none">
+                <option>solid</option>
+                <option>dashed</option>
+                <option>dotted</option>
+                <option>double</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Border Radius -->
+        <div class="mb-4">
+          <label class="text-sm text-gray-300 block mb-2">Border Radius</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">TL</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">TR</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">BL</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400 w-8">BR</span>
+              <input type="number" value="0" class="w-full bg-gray-700 text-sm px-3 py-1 rounded border-none" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Canvas Settings -->
+      <div class="p-4 border-b border-gray-700">
+        <h3 class="font-medium mb-4">Canvas</h3>
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-sm text-gray-300">Show Grid</span>
+          <label class="custom-switch">
+            <input type="checkbox" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-sm text-gray-300">Snap to Grid</span>
+          <label class="custom-switch">
+            <input type="checkbox">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div class="mb-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-gray-300">Grid Size</span>
+            <span class="text-sm">20px</span>
+          </div>
+          <input type="range" min="5" max="50" value="20" class="w-full">
+        </div>
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-sm text-gray-300">Show Rulers</span>
+          <label class="custom-switch">
+            <input type="checkbox">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+      <!-- Layers -->
+      <div class="p-4 flex-1">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-medium">Layers</h3>
+          <button class="text-gray-300 hover:text-white">
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center p-2 bg-gray-700 rounded">
+            <i class="ri-eye-line mr-2 text-sm"></i>
+            <span class="text-sm flex-1">Background</span>
+            <i class="ri-lock-unlock-line text-sm text-gray-400"></i>
+          </div>
+          <div class="flex items-center p-2 bg-primary bg-opacity-20 rounded">
+            <i class="ri-eye-line mr-2 text-sm"></i>
+            <span class="text-sm flex-1">Drawing Layer</span>
+            <i class="ri-lock-unlock-line text-sm text-gray-400"></i>
+          </div>
+          <div class="flex items-center p-2 bg-gray-700 rounded">
+            <i class="ri-eye-line mr-2 text-sm"></i>
+            <span class="text-sm flex-1">Text Layer</span>
+            <i class="ri-lock-unlock-line text-sm text-gray-400"></i>
+          </div>
+          <div class="flex items-center p-2 bg-gray-700 rounded">
+            <i class="ri-eye-off-line mr-2 text-sm text-gray-400"></i>
+            <span class="text-sm flex-1 text-gray-400">Hidden Layer</span>
+            <i class="ri-lock-line text-sm text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

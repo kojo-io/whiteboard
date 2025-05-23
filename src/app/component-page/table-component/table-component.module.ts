@@ -6,18 +6,20 @@ import { TableComponentComponent } from './table-component.component';
 import {LabelModule} from "../../../components/label/label.module";
 import {SelectModule} from "../../../components/select/select.module";
 import {TableModule} from "../../../components/table/table.module";
+import {PaginationModule} from "../../../components/pagination/pagination.module";
 
 
 @NgModule({
   declarations: [
     TableComponentComponent
   ],
-  imports: [
-    CommonModule,
-    TableComponentRoutingModule,
-    LabelModule,
-    SelectModule,
-    TableModule
-  ]
+    imports: [
+        CommonModule,
+        TableComponentRoutingModule,
+        LabelModule,
+        SelectModule,
+        TableModule,
+        PaginationModule
+    ]
 })
 export class TableComponentModule { }

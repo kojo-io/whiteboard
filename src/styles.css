@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Sofia+Sans+Semi+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+
 @import "primeicons/primeicons.css";
 @import "animate.css/animate.css";
 @import 'remixicon/fonts/remixicon.css';
@@ -6,6 +8,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.sofia-font{
+  font-family: "Sofia Sans Semi Condensed", sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 @font-face {
   font-family: 'Montserrat';

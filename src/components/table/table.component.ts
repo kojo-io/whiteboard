@@ -2,14 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  inject,
   Input,
   OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
+  SimpleChanges
 } from '@angular/core';
-import { PaginationComponent } from "../pagination/pagination.component";
 
 @Component({
   selector: 'sc-table',
@@ -17,73 +13,64 @@ import { PaginationComponent } from "../pagination/pagination.component";
   styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent implements OnInit, OnChanges {
-  @ViewChild('tablePaginate', { static: false }) paginate?: PaginationComponent;
-
+export class TableComponent implements OnChanges {
   @Input() data: any[] = [];
-  @Input() fullScreen = false;
-  @Input() usePagination = false;
-  @Input() border = false;
-  @Input() rounded = false;
-  @Input() shadow = false;
-  @Input() showPageLinks = true;
-  @Input() showPageOptions = true;
-  @Input() showCurrentPageInfo = false;
-  @Input() currentPageInfoTemplate?: string;
-  @Input() pageSizeOptions: number[] = [10, 20, 30, 40, 50];
-  @Input() paginationPosition: 'top-left' | 'top-right' | 'top-center' | 'bottom-center' | 'bottom-left' | 'bottom-right' = 'top-right';
   @Input() currentPage = 1;
   @Input() currentPageSize = 10;
-  @Input() totalPages = 0;
+  @Input() pageSizeOptions: number[] = [10, 20, 30, 40];
+  @Input() showPagination = true;
+  @Input() externalPagination = false;
+  @Input() paginationPosition: 'top' | 'bottom' = 'bottom';
 
-  cd = inject(ChangeDetectorRef);
   mainData: any[] = [];
+  totalPages = 0;
   first = 0;
   last = 0;
 
-  ngOnInit(): void {
-    this.calcPagination();
-  }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.calcPagination();
-  }
-
-  calcPagination(): void {
-    if (this.usePagination && this.paginate) {
-      const { first, last, currentPageSize } = this.paginate;
-      this.first = first === 0 ? 1 : first;
-      this.last = last > currentPageSize ? last + 1 : currentPageSize;
-
-      this.mainData = this.data.slice(this.first - 1, this.last);
-    } else {
-      this.mainData = [...this.data];
-      this.first = 1;
-      this.last = this.mainData.length;
+    if (changes['data'] || changes['currentPage'] || changes['currentPageSize']) {
+      this.updatePagination();
     }
-    this.cd.detectChanges();
   }
 
-  pageNumberChangeEvent(event: number): void {
-    this.currentPage = event;
-    this.calcPagination();
+  updatePagination(): void {
+    if (this.data?.length) {
+      this.totalPages = Math.ceil(this.data.length / this.currentPageSize);
+      const start = (this.currentPage - 1) * this.currentPageSize;
+      const end = start + this.currentPageSize;
+      this.mainData = this.data.slice(start, end);
+      this.first = start + 1;
+      this.last = Math.min(end, this.data.length);
+    } else {
+      this.mainData = [];
+      this.first = this.last = this.totalPages = 0;
+    }
+    this.cd.markForCheck();
   }
 
-  pageSizeChangeEvent(event: number): void {
-    this.currentPageSize = event;
-    this.calcPagination();
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.currentPageSize = size;
+    this.currentPage = 1; // Reset to first page
+    this.updatePagination();
   }
 
   sort(field: string, order: 'asc' | 'dsc' = 'asc'): void {
     const comparator = (a: any, b: any) => this.compareValues(a, b, field, order);
     this.data.sort(comparator);
-    this.calcPagination();
+    this.updatePagination();
   }
 
   sortNumber(field: string, order: 'asc' | 'dsc' = 'asc'): void {
     const comparator = (a: any, b: any) => this.compareValues(a, b, field, order, true);
     this.data.sort(comparator);
-    this.calcPagination();
+    this.updatePagination();
   }
 
   private compareValues(a: any, b: any, field: string, order: 'asc' | 'dsc', isNumeric = false): number {

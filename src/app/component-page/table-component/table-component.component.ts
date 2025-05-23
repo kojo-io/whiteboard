@@ -9,6 +9,8 @@ import {timer} from "rxjs";
 export class TableComponentComponent implements OnInit {
   data: any[] = [];
 
+  tablePage = 1;
+  tableSize = 10;
 
   generateRandomRecord = () => {
     const names = ['John Doe', 'Jane Smith', 'Michael Johnson', 'Emily Brown', 'Chris Davis'];

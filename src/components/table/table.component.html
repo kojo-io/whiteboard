@@ -1,57 +1,37 @@
-<div class="flex flex-col w-full overflow-auto bg-white"
-     [ngClass]="{'h-full': fullScreen,
-     'border': border,
-     'rounded-[5px]': border && rounded,
-     'drop-shadow': border && shadow}">
-  @if(paginationPosition.includes('top') && usePagination) {
-    <div class="flex h-auto items-center w-full px-[24px] py-[12px]"
-         [ngClass]="{'justify-end': paginationPosition === 'top-right',
-         'justify-start': paginationPosition === 'top-left',
-         'justify-center': paginationPosition === 'top-center'}">
-      <sc-pagination
-        #tablePaginate
-        [totalRecords]="data.length"
-        [currentPage]="currentPage"
-        [currentPageSize]="currentPageSize"
-        [showPageLinks]="showPageLinks"
-        [showPageOptions]="showPageOptions"
-        [showCurrentPageInfo]="showCurrentPageInfo"
-        [pageSizeOptions]="pageSizeOptions"
-        [totalPages]="totalPages"
-        [currentPageInfoTemplate]="currentPageInfoTemplate"
-        (onPageNumberChange)="pageNumberChangeEvent($event)"
-        (onPageSizeChange)="pageSizeChangeEvent($event)"
-      />
-    </div>
-  }
-  <div class="grow h-full w-full" [ngClass]="{'overflow-auto': usePagination}">
-    <div class="relative overflow-x-auto h-full">
-      <table Table>
-        <ng-content></ng-content>
-      </table>
-    </div>
+<div class="flex flex-col w-full h-full">
+  <!-- Top Pagination -->
+<div class="px-6 py-4 border-b" *ngIf="showPagination && !externalPagination && paginationPosition === 'top'">
+  <sc-pagination
+    [totalRecords]="data.length"
+    [currentPage]="currentPage"
+    [currentPageSize]="currentPageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [first]="first"
+    [last]="last"
+    [totalPages]="totalPages"
+    (onPageNumberChange)="onPageChange($event)"
+    (onPageSizeChange)="onPageSizeChange($event)"
+  />
+</div>
+
+  <div class="grow h-full w-full relative overflow-auto">
+    <table Table class="min-w-full">
+      <ng-content></ng-content>
+    </table>
   </div>
-  @if(paginationPosition.includes('bottom') && usePagination) {
-    <div class="flex h-auto items-center w-full px-[24px] py-[12px]"
-         [ngClass]="{'justify-end': paginationPosition === 'bottom-right',
-         'justify-start': paginationPosition === 'bottom-left',
-         'justify-center': paginationPosition === 'bottom-center'}">
-      <sc-pagination
-        #tablePaginate
-        [totalRecords]="data.length"
-        [currentPage]="currentPage"
-        [currentPageSize]="currentPageSize"
-        [showPageLinks]="showPageLinks"
-        [showPageOptions]="showPageOptions"
-        [showCurrentPageInfo]="showCurrentPageInfo"
-        [pageSizeOptions]="pageSizeOptions"
-        [totalPages]="totalPages"
-        [first]="first"
-        [last]="last"
-        [currentPageInfoTemplate]="currentPageInfoTemplate"
-        (onPageNumberChange)="pageNumberChangeEvent($event)"
-        (onPageSizeChange)="pageSizeChangeEvent($event)"
-      />
-    </div>
-  }
+
+  <!-- Bottom Pagination -->
+  <div class="px-6 py-4 border-t"  *ngIf="showPagination && !externalPagination && paginationPosition === 'bottom'">
+    <sc-pagination
+      [totalRecords]="data.length"
+      [currentPage]="currentPage"
+      [currentPageSize]="currentPageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [first]="first"
+      [last]="last"
+      [totalPages]="totalPages"
+      (onPageNumberChange)="onPageChange($event)"
+      (onPageSizeChange)="onPageSizeChange($event)"
+    />
+  </div>
 </div>

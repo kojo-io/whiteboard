@@ -1,0 +1,12 @@
+<div>
+  <!-- Header -->
+  <button (click)="toggleAccordion()" class="w-full flex justify-between items-center transition px-4 py-3">
+    <ng-content select="sc-accordion-title"></ng-content>
+    <i [class.rotate-180]="isCollapsed" class="ri-arrow-down-s-line transition-transform duration-300"></i>
+  </button>
+
+  <!-- Content -->
+  <div #content class="overflow-hidden h-0 opacity-0 text-gray-700 bg-white">
+    <ng-content></ng-content>
+  </div>
+</div>

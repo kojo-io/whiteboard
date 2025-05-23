@@ -2,33 +2,28 @@
   <h1 class="text-4xl w-full text-center">Table</h1>
   <div class="h-full flex w-full justify-center grow">
     <div class="container grid grid-cols-1 gap-4 h-full w-full">
-      <div class="w-full">
+      <div class="w-full h-[500px] border overflow-auto rounded shadow-md">
         <sc-table
           #table
           [data]="data"
-          [usePagination]="true"
-          [showCurrentPageInfo]="true"
-          [showPageLinks]="true"
-          [currentPageSize]="10"
-          currentPageInfoTemplate="Page {currentPage} of {totalPages}"
-          [pageSizeOptions]="[10, 20, 30, 40]"
-          [border]="true"
-          [rounded]="true"
-          [shadow]="true"
-          paginationPosition="bottom-right">
+          [currentPage]="tablePage"
+          [currentPageSize]="tableSize"
+          [externalPagination]="false"
+          paginationPosition="top"
+          [showPagination]="true">
           <thead Thead>
-          <tr>
+          <tr Tr>
             <th Th>Name</th>
             <th Th>Email</th>
-            <th Th>Phone Number</th>
+            <th Th>Phone</th>
           </tr>
           </thead>
           <tbody>
-          <ng-container *ngFor="let item of table.mainData; let i = index">
+          <ng-container *ngFor="let item of table.mainData">
             <tr Tr>
-              <td Td>{{item.name}}</td>
-              <td Td>{{item.email}}</td>
-              <td Td>{{item.phone}}</td>
+              <td Td>{{ item.name }}</td>
+              <td Td>{{ item.email }}</td>
+              <td Td>{{ item.phone }}</td>
             </tr>
           </ng-container>
           </tbody>
@@ -36,5 +31,21 @@
       </div>
     </div>
   </div>
-
+  <!-- External Pagination -->
+  <sc-pagination
+    [totalRecords]="data.length"
+    [currentPage]="tablePage"
+    [currentPageSize]="tableSize"
+    [pageSizeOptions]="[10, 20, 30, 40]"
+    [totalPages]="table.totalPages"
+    [first]="table.first"
+    [last]="table.last"
+    [showCurrentPageInfo]="true"
+    currentPageInfoTemplate="Showing {first} to {last} of {totalRecords} mentor types"
+    (onPageNumberChange)="tablePage = $event; table.onPageChange($event)"
+    (onPageSizeChange)="tableSize = $event; table.onPageSizeChange($event)"
+  />
 </div>
+
+
+
