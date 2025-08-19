@@ -1,5 +1,6 @@
-import {Component, inject, Inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {SelectService} from "../select.service";
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'sc-select-option',
@@ -12,7 +13,6 @@ export class SelectOptionComponent implements OnInit{
   @Input() disabled = false;
   @Input() selected = false;
   template: boolean = false
-
   @Inject(SelectService) private service = inject(SelectService);
 
 
@@ -26,6 +26,7 @@ export class SelectOptionComponent implements OnInit{
 
   ngOnInit(): void {
     if(this.selected) {
+      console.log(this.selected, this.value, this.label);
       this.service.incoming.next({value: this.value, label: this.label});
     }
 

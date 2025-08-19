@@ -56,7 +56,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor{
     this.service.selected
       .subscribe({
         next: (value: {value: any, label: any}) => {
-          if (value) {
+          if (value.value || value.value > -1 && value.value != null) {
             this.displayLabel = value.label;
             this.displayValue = value.value;
             this.selected = true;
@@ -69,10 +69,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor{
     this.service.incoming
       .subscribe({
         next: (value: {value: any, label: any}) => {
+          console.log(this.selected, value);
           if (value) {
             this.displayLabel = value.label;
             this.displayValue = value.value;
             this.selected = true;
+            this.onChange(value.value);
           }
         }
       });

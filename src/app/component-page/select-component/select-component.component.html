@@ -14,7 +14,7 @@
               <sc-radio-button value="sure"/>
             </sc-radio-group>
             <sc-label>Template Mode (custom select)</sc-label>
-            <sc-select [(ngModel)]="selected" [displayTemplate]="sampleSelect" [template]="true" placeholder="Select"
+            <!-- <sc-select [(ngModel)]="selected" [displayTemplate]="sampleSelect" [template]="true" placeholder="Select"
                        (ngModelChange)="getSelected($event)">
               <ng-template #sampleSelect>
                 <div class="flex items-center space-x-[8px] w-full">
@@ -29,15 +29,15 @@
                   <span class="text-[14px] leading-[20px] text-[#374151]">{{item.title}}</span>
                 </div>
               </sc-select-option>
-            </sc-select>
+            </sc-select> -->
           </div>
-          <div class="w-64">
-            <sc-label>General Select List (No array data)</sc-label>
-            <sc-select [(ngModel)]="selected2" placeholder="Select list" (ngModelChange)="getDispSelected($event)" [allowClear]="true" [suffixTemplate]="suffix">
-              <sc-select-option [value]="1" [selected]="selected2 === 1">
-                User
+          <form [formGroup]="form" class="w-64">
+           <div>
+             <sc-label>General Select List (No array data)</sc-label>
+            <sc-select formControlName="select" placeholder="Select list" [allowClear]="true" [suffixTemplate]="suffix">
+              <sc-select-option *ngFor="let item of list" [label]="item.title" [value]="item.id" [selected]="item.id === form.controls.select.value">
               </sc-select-option>
-              <sc-select-option [value]="2" [selected]="selected2 === 2">
+              <!-- <sc-select-option [value]="2" [selected]="selected2 === 2">
                 Admin
               </sc-select-option>
               <sc-select-option [value]="3" [selected]="selected2 === 3">
@@ -45,13 +45,32 @@
               </sc-select-option>
               <sc-select-option [value]="4" [selected]="selected2 === 4">
                 Standard Standard Standard Standard Standard Standard Standard Standard
-              </sc-select-option>
+              </sc-select-option> -->
             </sc-select>
 
             <ng-template #suffix>
               <i class="ri-add-line leading-none cursor-pointer"></i>
             </ng-template>
-          </div>
+           </div>
+            <sc-label>General Select List (No array data)</sc-label>
+            <sc-select formControlName="select2" placeholder="Select list" [allowClear]="true" [suffixTemplate]="suffix">
+              <sc-select-option *ngFor="let item of list" [label]="item.title" [value]="item.id" [selected]="item.id === form.controls.select2.value">
+              </sc-select-option>
+              <!-- <sc-select-option [value]="2" [selected]="selected2 === 2">
+                Admin
+              </sc-select-option>
+              <sc-select-option [value]="3" [selected]="selected2 === 3">
+                Standard
+              </sc-select-option>
+              <sc-select-option [value]="4" [selected]="selected2 === 4">
+                Standard Standard Standard Standard Standard Standard Standard Standard
+              </sc-select-option> -->
+            </sc-select>
+
+            <ng-template #suffix>
+              <i class="ri-add-line leading-none cursor-pointer"></i>
+            </ng-template>
+          </form>
           <div class="w-64">
             <sc-multi-select ngModel (ngModelChange)="getDispSelected($event)" [data]="newList">
               <sc-multi-select-option [value]="1" label="User">
